@@ -17,10 +17,9 @@ public class CityController {
         this.cityService = cityService;
     }
 
-    @GetMapping("/cities/{cityName}")
+    @GetMapping("/cities/name/{cityName}")
     public City getCityName(@PathVariable String cityName) {
-        return cityService.getCityByName(cityName)
-                .orElse(null);
+        return cityService.getCityByName(cityName);
     }
 
     @GetMapping("/cities")
@@ -31,6 +30,11 @@ public class CityController {
     @PostMapping("/cities")
     public City createCity(@RequestBody CityRequest request) {
         return cityService.createCity(request);
+    }
+
+    @DeleteMapping("/cities/delete/{cityName}")
+    public void deleteCity(@PathVariable String cityName) {
+        cityService.deleteCityByName(cityName);
     }
 
 }

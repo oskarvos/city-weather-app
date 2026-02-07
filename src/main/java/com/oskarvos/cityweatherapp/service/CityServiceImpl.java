@@ -7,7 +7,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -19,7 +18,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public Optional<City> getCityByName(String cityName) {
+    public City getCityByName(String cityName) {
         return cityRepository.findByCityName(cityName);
     }
 
@@ -36,6 +35,13 @@ public class CityServiceImpl implements CityService {
         city.setTemperature(request.getTemperature());
 
         return cityRepository.save(city);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCityByName(String cityName) {
+        City city = cityRepository.findByCityName(cityName);
+        cityRepository.delete(city);
     }
 
 }
