@@ -15,4 +15,5 @@ public interface CityRepository extends JpaRepository<City, Long> {
 
     @Query("SELECT c FROM City c ORDER BY c.id DESC")
     List<City> findAllOrderByIdDesc();
+
 }
