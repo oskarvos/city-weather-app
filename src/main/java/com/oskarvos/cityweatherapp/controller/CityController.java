@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class CityController {
@@ -22,4 +24,10 @@ public class CityController {
         return cityService.getCityByName(cityName)
                 .orElse(null);
     }
+
+    @GetMapping("/cities")
+    public List<City> getCities() {
+        return cityService.getAllCities();
+    }
+
 }

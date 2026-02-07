@@ -4,6 +4,7 @@ import com.oskarvos.cityweatherapp.model.entity.City;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +18,10 @@ public class CityServiceImpl implements CityService {
 
     public Optional<City> getCityByName(String cityName) {
         return cityRepository.findByCityName(cityName);
+    }
+
+    public List<City> getAllCities() {
+        return cityRepository.findAllOrderByIdDesc();
     }
 
 }
