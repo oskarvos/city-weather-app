@@ -7,5 +7,5 @@ VALUES (3)
 ON CONFLICT (city_id) DO NOTHING;
 
 INSERT INTO favorite_cities(city_id)
-VALUES (7)
+VALUES (6)
 ON CONFLICT (city_id) DO NOTHING;

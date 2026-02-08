@@ -2,5 +2,6 @@ CREATE TABLE IF NOT EXISTS cities
 (
     id          BIGSERIAL PRIMARY KEY,
     city_name   VARCHAR(50)      NOT NULL UNIQUE,
-    temperature DOUBLE PRECISION NOT NULL
+    temperature DOUBLE PRECISION NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
