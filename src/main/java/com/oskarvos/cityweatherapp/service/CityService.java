@@ -12,6 +12,8 @@ public interface CityService {
 
     CityResponse createCity(CityRequest request);
 
+    CityResponse updateCity(CityRequest request);
+
     CityResponse deleteCityByName(String cityName);
 
 }

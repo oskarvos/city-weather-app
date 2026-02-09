@@ -60,6 +60,26 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional
+    public CityResponse updateCity(CityRequest request) {
+        if (request == null) {
+            return new CityResponse("Необходимо ввести название города!");
+        }
+
+        City city = cityRepository.findByCityName(request.getCityName());
+        if (city == null) {
+            return new CityResponse(String.format("Город %s не найден!", request.getCityName()));
+        }
+
+        city.setCityName(request.getCityName());
+        city.setTemperature(request.getTemperature());
+        cityRepository.save(city);
+
+        return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
+    }
+
+
+    @Override
+    @Transactional
     public CityResponse deleteCityByName(String cityName) {
         if (cityName == null) {
             return new CityResponse("Необходимо ввести название города!");
