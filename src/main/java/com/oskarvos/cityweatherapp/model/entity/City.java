@@ -31,6 +31,11 @@ public class City {
     public City() {
     }
 
+    public City(String cityName, Double temperature) {
+        this.cityName = cityName;
+        this.temperature = temperature;
+    }
+
     @PrePersist
     protected void onCreatedDate() {
         this.createdAt = LocalDateTime.now();
@@ -75,4 +80,5 @@ public class City {
     public void setFavoriteCity(FavoriteCity favoriteCity) {
         this.favoriteCity = favoriteCity;
     }
+
 }

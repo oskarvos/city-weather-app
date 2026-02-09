@@ -1,18 +1,17 @@
 package com.oskarvos.cityweatherapp.service;
 
+import com.oskarvos.cityweatherapp.model.dto.CityListResponse;
 import com.oskarvos.cityweatherapp.model.dto.CityRequest;
-import com.oskarvos.cityweatherapp.model.entity.City;
-
-import java.util.List;
+import com.oskarvos.cityweatherapp.model.dto.CityResponse;
 
 public interface CityService {
 
-    City getCityByName(String cityName);
+    CityResponse getCityByName(String cityName);
 
-    List<City> getAllCities();
+    CityListResponse getAllCities();
 
-    City createCity(CityRequest request);
+    CityResponse createCity(CityRequest request);
 
-    void deleteCityByName(String cityName);
+    CityResponse deleteCityByName(String cityName);
 
 }

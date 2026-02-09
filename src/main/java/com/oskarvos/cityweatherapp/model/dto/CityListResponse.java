@@ -22,4 +22,5 @@ public class CityListResponse {
     public void setCityList(List<City> cityList) {
         this.cityList = cityList;
     }
+
 }

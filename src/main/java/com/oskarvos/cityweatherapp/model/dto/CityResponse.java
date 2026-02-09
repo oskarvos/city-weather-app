@@ -1,13 +1,16 @@
 package com.oskarvos.cityweatherapp.model.dto;
 
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@Component
+@JsonInclude(JsonInclude.Include.NON_NULL)  // скрыть поля null
+@JsonPropertyOrder({"id", "cityName", "temperature"})
 public class CityResponse {
 
     private Long id;
     private String cityName;
     private Double temperature;
+    private String info;
 
     public CityResponse() {
     }
@@ -16,6 +19,14 @@ public class CityResponse {
         this.id = id;
         this.cityName = cityName;
         this.temperature = temperature;
+        this.info = null;
+    }
+
+    public CityResponse(String info) {
+        this.id = null;
+        this.cityName = null;
+        this.temperature = null;
+        this.info = info;
     }
 
     public Long getId() {
@@ -41,4 +52,13 @@ public class CityResponse {
     public void setTemperature(Double temperature) {
         this.temperature = temperature;
     }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
 }

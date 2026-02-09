@@ -1,6 +1,8 @@
 package com.oskarvos.cityweatherapp.service;
 
+import com.oskarvos.cityweatherapp.model.dto.CityListResponse;
 import com.oskarvos.cityweatherapp.model.dto.CityRequest;
+import com.oskarvos.cityweatherapp.model.dto.CityResponse;
 import com.oskarvos.cityweatherapp.model.entity.City;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
 import jakarta.transaction.Transactional;
@@ -19,33 +21,57 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public City getCityByName(String cityName) {
-        return cityRepository.findByCityName(cityName);
+    public CityResponse getCityByName(String cityName) {
+        if (cityName == null) {
+            return new CityResponse("Необходимо ввести название города!");
+        }
+
+        City city = cityRepository.findByCityName(cityName);
+        if (city == null) {
+            return new CityResponse(String.format("Город %s не найден!", cityName));
+        }
+
+        return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
     }
 
+
     @Override
-    public List<City> getAllCities() {
+    public CityListResponse getAllCities() {
         List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
         List<City> nonFavoriteCities = cityRepository.findNonFavoriteCitiesOrderByCreatedDateDesc();
-        return Stream.concat(favoriteCities.stream(), nonFavoriteCities.stream())
+        List<City> result = Stream.concat(favoriteCities.stream(), nonFavoriteCities.stream())
                 .toList();
+        return new CityListResponse(result);
     }
 
     @Override
     @Transactional
-    public City createCity(CityRequest request) {
-        City city = new City();
-        city.setCityName(request.getCityName());
-        city.setTemperature(request.getTemperature());
-
-        return cityRepository.save(city);
+    public CityResponse createCity(CityRequest request) {
+        City city = cityRepository.findByCityName(request.getCityName());
+        if (city == null) {
+            city = new City(request.getCityName(), request.getTemperature());
+            cityRepository.save(city);
+            return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
+        } else {
+            return new CityResponse(String.format(
+                    "Город %s не был добавлен, так как существует в списке!", request.getCityName()));
+        }
     }
 
     @Override
     @Transactional
-    public void deleteCityByName(String cityName) {
+    public CityResponse deleteCityByName(String cityName) {
+        if (cityName == null) {
+            return new CityResponse("Необходимо ввести название города!");
+        }
+
         City city = cityRepository.findByCityName(cityName);
+        if (city == null) {
+            return new CityResponse(String.format("Город %s не найден!", cityName));
+        }
+
         cityRepository.delete(city);
+        return new CityResponse(String.format("Город %s удален из списка!", cityName));
     }
 
 }
