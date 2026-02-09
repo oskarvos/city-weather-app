@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -24,7 +25,10 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public List<City> getAllCities() {
-        return cityRepository.findAllOrderByIdDesc();
+        List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
+        List<City> nonFavoriteCities = cityRepository.findNonFavoriteCitiesOrderByCreatedDateDesc();
+        return Stream.concat(favoriteCities.stream(), nonFavoriteCities.stream())
+                .toList();
     }
 
     @Override
