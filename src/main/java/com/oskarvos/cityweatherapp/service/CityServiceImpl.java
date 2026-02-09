@@ -34,7 +34,6 @@ public class CityServiceImpl implements CityService {
         return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
     }
 
-
     @Override
     public CityListResponse getAllCities() {
         List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
@@ -76,7 +75,6 @@ public class CityServiceImpl implements CityService {
 
         return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
     }
-
 
     @Override
     @Transactional
