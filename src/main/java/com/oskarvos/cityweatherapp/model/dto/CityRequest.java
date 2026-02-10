@@ -5,7 +5,7 @@ public class CityRequest {
     private String cityName;
     private Double temperature;
 
-    private CityRequest() {
+    public CityRequest() {
     }
 
     public CityRequest(String cityName, Double temperature) {

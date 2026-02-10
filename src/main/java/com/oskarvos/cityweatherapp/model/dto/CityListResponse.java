@@ -6,21 +6,21 @@ import java.util.List;
 
 public class CityListResponse {
 
-    private List<City> cityList;
+    private List<City> cities;
 
     public CityListResponse() {
     }
 
-    public CityListResponse(List<City> cityList) {
-        this.cityList = cityList;
+    public CityListResponse(List<City> cities) {
+        this.cities = cities;
     }
 
-    public List<City> getCityList() {
-        return cityList;
+    public List<City> getCities() {
+        return cities;
     }
 
-    public void setCityList(List<City> cityList) {
-        this.cityList = cityList;
+    public void setCities(List<City> cities) {
+        this.cities = cities;
     }
 
 }

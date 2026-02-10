@@ -8,6 +8,7 @@ import com.oskarvos.cityweatherapp.repository.CityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -15,9 +16,11 @@ import java.util.stream.Stream;
 public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
+    private final WeatherServiceImpl weatherServiceImpl;
 
-    public CityServiceImpl(CityRepository cityRepository) {
+    public CityServiceImpl(CityRepository cityRepository, WeatherServiceImpl weatherServiceImpl) {
         this.cityRepository = cityRepository;
+        this.weatherServiceImpl = weatherServiceImpl;
     }
 
     @Override
@@ -26,11 +29,7 @@ public class CityServiceImpl implements CityService {
             return new CityResponse("Необходимо ввести название города!");
         }
 
-        City city = cityRepository.findByCityName(cityName);
-        if (city == null) {
-            return new CityResponse(String.format("Город %s не найден!", cityName));
-        }
-
+        City city = weatherServiceImpl.getActualWeather(cityName);
         return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
     }
 
@@ -49,6 +48,7 @@ public class CityServiceImpl implements CityService {
         City city = cityRepository.findByCityName(request.getCityName());
         if (city == null) {
             city = new City(request.getCityName(), request.getTemperature());
+            city.setCreatedAt(LocalDateTime.now());
             cityRepository.save(city);
             return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
         } else {

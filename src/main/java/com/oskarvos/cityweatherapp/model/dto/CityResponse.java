@@ -3,7 +3,7 @@ package com.oskarvos.cityweatherapp.model.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)  // скрыть поля null
+@JsonInclude(JsonInclude.Include.NON_NULL)  // скрыть поля null в ответе (конструктор)
 @JsonPropertyOrder({"id", "cityName", "temperature"})
 public class CityResponse {
 

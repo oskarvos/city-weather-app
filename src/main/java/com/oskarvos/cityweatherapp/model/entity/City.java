@@ -36,11 +36,6 @@ public class City {
         this.temperature = temperature;
     }
 
-    @PrePersist
-    protected void onCreatedDate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
     public Long getId() {
         return id;
     }
