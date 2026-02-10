@@ -31,11 +31,6 @@ public class CityController {
         return cityService.createCity(request);
     }
 
-    @PutMapping("/cities")
-    public CityResponse updateCity(@RequestBody CityRequest request) {
-        return cityService.updateCity(request);
-    }
-
     @DeleteMapping("/cities/delete/{cityName}")
     public CityResponse deleteCity(@PathVariable String cityName) {
         return cityService.deleteCityByName(cityName);

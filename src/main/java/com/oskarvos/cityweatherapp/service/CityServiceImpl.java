@@ -37,9 +37,7 @@ public class CityServiceImpl implements CityService {
     public CityListResponse getAllCities() {
         List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
         List<City> nonFavoriteCities = cityRepository.findNonFavoriteCitiesOrderByCreatedDateDesc();
-        List<City> result = Stream.concat(favoriteCities.stream(), nonFavoriteCities.stream())
-                .toList();
-        return new CityListResponse(result);
+        return new CityListResponse(favoriteCities, nonFavoriteCities);
     }
 
     @Override
@@ -48,32 +46,12 @@ public class CityServiceImpl implements CityService {
         City city = cityRepository.findByCityName(request.getCityName());
         if (city == null) {
             city = new City(request.getCityName(), request.getTemperature());
-            city.setCreatedAt(LocalDateTime.now());
             cityRepository.save(city);
             return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
         } else {
             return new CityResponse(String.format(
                     "Город %s не был добавлен, так как существует в списке!", request.getCityName()));
         }
-    }
-
-    @Override
-    @Transactional
-    public CityResponse updateCity(CityRequest request) {
-        if (request == null) {
-            return new CityResponse("Необходимо ввести название города!");
-        }
-
-        City city = cityRepository.findByCityName(request.getCityName());
-        if (city == null) {
-            return new CityResponse(String.format("Город %s не найден!", request.getCityName()));
-        }
-
-        city.setCityName(request.getCityName());
-        city.setTemperature(request.getTemperature());
-        cityRepository.save(city);
-
-        return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
     }
 
     @Override
