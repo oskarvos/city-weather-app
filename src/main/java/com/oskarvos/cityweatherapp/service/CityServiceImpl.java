@@ -1,16 +1,13 @@
 package com.oskarvos.cityweatherapp.service;
 
 import com.oskarvos.cityweatherapp.model.dto.CityListResponse;
-import com.oskarvos.cityweatherapp.model.dto.CityRequest;
 import com.oskarvos.cityweatherapp.model.dto.CityResponse;
 import com.oskarvos.cityweatherapp.model.entity.City;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -30,6 +27,10 @@ public class CityServiceImpl implements CityService {
         }
 
         City city = weatherServiceImpl.getActualWeather(cityName);
+        if (city.getCityName() == null) {
+            new CityResponse(
+                    "Город не найден в openweathermap.org, введите корректный город");
+        }
         return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
     }
 
@@ -38,20 +39,6 @@ public class CityServiceImpl implements CityService {
         List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
         List<City> nonFavoriteCities = cityRepository.findNonFavoriteCitiesOrderByCreatedDateDesc();
         return new CityListResponse(favoriteCities, nonFavoriteCities);
-    }
-
-    @Override
-    @Transactional
-    public CityResponse createCity(CityRequest request) {
-        City city = cityRepository.findByCityName(request.getCityName());
-        if (city == null) {
-            city = new City(request.getCityName(), request.getTemperature());
-            cityRepository.save(city);
-            return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
-        } else {
-            return new CityResponse(String.format(
-                    "Город %s не был добавлен, так как существует в списке!", request.getCityName()));
-        }
     }
 
     @Override

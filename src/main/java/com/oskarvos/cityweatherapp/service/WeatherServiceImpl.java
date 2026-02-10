@@ -30,8 +30,10 @@ public class WeatherServiceImpl implements WeatherService {
         City city = cityRepository.findByCityName(cityName);
         if (city != null) {
             long betweenHours = ChronoUnit.HOURS.between(city.getCreatedAt(), LocalDateTime.now());
+
             if (betweenHours > weatherConfig.getCacheDuration()) {
                 WeatherApiResponse weatherApiResponse = weatherApiClient.getWeatherByCityName(cityName);
+
                 city.setTemperature(weatherApiResponse.getTemperature());
                 city.setCreatedAt(LocalDateTime.now());
                 cityRepository.save(city);
@@ -39,8 +41,14 @@ public class WeatherServiceImpl implements WeatherService {
             } else {
                 return city;
             }
+        } else {
+            WeatherApiResponse weatherApiResponse = weatherApiClient.getWeatherByCityName(cityName);
+            City newCity = new City();
+            newCity.setCityName(weatherApiResponse.getCityName());
+            newCity.setTemperature(weatherApiResponse.getTemperature());
+            cityRepository.save(newCity);
+            return newCity;
         }
-        return new City();
     }
 
 }
