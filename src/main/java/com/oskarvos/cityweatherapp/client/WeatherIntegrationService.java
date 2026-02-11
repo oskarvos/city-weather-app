@@ -7,12 +7,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class WeatherApiClient { // идет на сервер openweathermap.org и возвращает JSON
+public class WeatherIntegrationService { // идет на сервер openweathermap.org и возвращает JSON
 
     private final RestTemplate restTemplate;
     private final WeatherConfig weatherConfig;
 
-    public WeatherApiClient(RestTemplate restTemplate, WeatherConfig weatherConfig) {
+    public WeatherIntegrationService(RestTemplate restTemplate, WeatherConfig weatherConfig) {
         this.restTemplate = restTemplate;
         this.weatherConfig = weatherConfig;
     }

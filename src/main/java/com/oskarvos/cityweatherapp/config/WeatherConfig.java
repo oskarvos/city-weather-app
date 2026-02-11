@@ -9,7 +9,6 @@ public class WeatherConfig {
 
     private String url;
     private String key;
-    private Long cacheDuration;
     private String units;
 
     public String getUrl() {
@@ -26,14 +25,6 @@ public class WeatherConfig {
 
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public Long getCacheDuration() {
-        return cacheDuration;
-    }
-
-    public void setCacheDuration(Long cacheDuration) {
-        this.cacheDuration = cacheDuration;
     }
 
     public String getUnits() {

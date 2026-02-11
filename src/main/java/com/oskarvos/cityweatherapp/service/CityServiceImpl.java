@@ -1,17 +1,15 @@
 package com.oskarvos.cityweatherapp.service;
 
-import com.oskarvos.cityweatherapp.config.WeatherConfig;
-import com.oskarvos.cityweatherapp.exception.NotFoundException;
-import com.oskarvos.cityweatherapp.exception.ValidationException;
 import com.oskarvos.cityweatherapp.model.dto.CityListResponse;
 import com.oskarvos.cityweatherapp.model.dto.CityResponse;
+import com.oskarvos.cityweatherapp.model.dto.external.BuildCityResponse;
 import com.oskarvos.cityweatherapp.model.entity.City;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
+import com.oskarvos.cityweatherapp.validation.date.DateValidator;
+import com.oskarvos.cityweatherapp.validation.name.CityNameValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -19,44 +17,45 @@ public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
     private final WeatherService weatherService;
-    private final WeatherConfig weatherConfig;
+    private final DateValidator dateValidator;
+    private final BuildCityResponse buildCityResponse;
+    private final CityNameValidator cityNameValidator;
 
     public CityServiceImpl(CityRepository cityRepository,
                            WeatherService weatherService,
-                           WeatherConfig weatherConfig) {
+                           DateValidator dateValidator,
+                           BuildCityResponse buildCityResponse,
+                           CityNameValidator cityNameValidator) {
         this.cityRepository = cityRepository;
         this.weatherService = weatherService;
-        this.weatherConfig = weatherConfig;
+        this.dateValidator = dateValidator;
+        this.buildCityResponse = buildCityResponse;
+        this.cityNameValidator = cityNameValidator;
     }
 
     @Override
     public CityResponse getCityByName(String cityName) {
-        validateCityName(cityName); // проверяем входные данные
+        cityNameValidator.validate(cityName); // проверяем входные данные
 
-        try {
-            City city = getValidatedCity(cityName); // получаем с сервера openweathermap.org
-            // и проверяем получен ли валидный ответ
+        City city = weatherService.getActualWeather(cityName); // получаем город от сервера погоды
 
-            if (isWeatherStale(city)) { // проверяем устаревшие ли данные
-                return buildResponse(city);
-            }
-            return buildResponse(city);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new CityResponse("Город '" + cityName + "' не найден!"); // выводим сообщение клиенту,
-            // что на сервере такого города не существует
+        if (dateValidator.validate(city.getCreatedAt())) { // проверяем устаревшие ли данные (если устаревшая)
+            return buildCityResponse.buildWithWarning(city); // выбрасываем старые данные, с пометкой "устаревшие"
         }
+        return buildCityResponse.buildValid(city);
     }
 
     @Override
     @Transactional
     public CityResponse deleteCityByName(String cityName) {
-        validateCityName(cityName);
+        cityNameValidator.validate(cityName);
         City city = cityRepository.findByCityName(cityName);
-        validationCityAndName(city);
-        cityRepository.delete(city);
-
-        return buildResponse(city);
+        try {
+            cityRepository.delete(city);
+            return buildCityResponse.buildDeleteCity(city);
+        } catch (Exception e) {
+            throw new RuntimeException("В БД нет такого города!", e);
+        }
     }
 
     @Override
@@ -64,47 +63,6 @@ public class CityServiceImpl implements CityService {
         List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
         List<City> nonFavoriteCities = cityRepository.findNonFavoriteCitiesOrderByCreatedDateDesc();
         return new CityListResponse(favoriteCities, nonFavoriteCities);
-    }
-
-    private void validateCityName(String cityName) {
-        if (cityName == null || cityName.trim().isEmpty()) {
-            throw new ValidationException("Необходимо ввести название города!");
-        }
-    }
-
-    private City getValidatedCity(String cityName) {
-        City city = weatherService.getActualWeather(cityName);
-        validationCityAndName(city);
-        return city;
-    }
-
-    private void validationCityAndName(City city) {
-        if (city == null || city.getCityName() == null) {
-            throw new NotFoundException("Город не найден!");
-        }
-    }
-
-    private boolean isWeatherStale(City city) {
-        if (city.getCreatedAt() == null) return true;
-
-        long hoursBetween = ChronoUnit.HOURS.between(
-                city.getCreatedAt(),
-                LocalDateTime.now());
-        return hoursBetween > weatherConfig.getCacheDuration();
-    }
-
-    private CityResponse buildResponse(City city) {
-        if (city == null) return null;
-        if (isWeatherStale(city)) {
-            return new CityResponse(
-                    city.getId(),
-                    city.getCityName(),
-                    city.getTemperature(),
-                    city.getCreatedAt(),
-                    "Данные температуры не актуальны"
-            );
-        }
-        return new CityResponse(city.getId(), city.getCityName(), city.getTemperature());
     }
 
 }

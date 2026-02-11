@@ -1,45 +1,49 @@
 package com.oskarvos.cityweatherapp.service;
 
-import com.oskarvos.cityweatherapp.client.WeatherApiClient;
-import com.oskarvos.cityweatherapp.config.WeatherConfig;
+import com.oskarvos.cityweatherapp.client.WeatherIntegrationService;
 import com.oskarvos.cityweatherapp.model.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.model.entity.City;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
+import com.oskarvos.cityweatherapp.validation.date.DateValidator;
+import com.oskarvos.cityweatherapp.validation.name.CityNameValidator;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Service
-    public class WeatherServiceImpl implements WeatherService {
+public class WeatherServiceImpl implements WeatherService {
 
     private final CityRepository cityRepository;
-    private final WeatherApiClient weatherApiClient;
-    private final WeatherConfig weatherConfig;
+    private final WeatherIntegrationService weatherIntegrationService;
+    private final CityNameValidator cityNameValidator;
+    private final DateValidator dateValidator;
 
     public WeatherServiceImpl(CityRepository cityRepository,
-                              WeatherApiClient weatherApiClient,
-                              WeatherConfig weatherConfig) {
+                              WeatherIntegrationService weatherIntegrationService,
+                              CityNameValidator cityNameValidator,
+                              DateValidator dateValidator) {
         this.cityRepository = cityRepository;
-        this.weatherApiClient = weatherApiClient;
-        this.weatherConfig = weatherConfig;
+        this.weatherIntegrationService = weatherIntegrationService;
+        this.cityNameValidator = cityNameValidator;
+        this.dateValidator = dateValidator;
     }
 
     @Override
     public City getActualWeather(String cityName) {
-        City dbcity = cityRepository.findByCityName(cityName);
+        cityNameValidator.validate(cityName);
+        City dbCity = cityRepository.findByCityName(cityName);
 
-        if (dbcity == null) {
+        if (dbCity == null) {
             return saveCityInDb(cityName);
-        } else if (isCacheExpired(dbcity.getCreatedAt(), weatherConfig.getCacheDuration())) {
-            return updateCityDb(dbcity, cityName);
+        } else if (dateValidator.validate(dbCity.getCreatedAt())) {
+            return updateCityDb(dbCity, cityName);
         }
-        return dbcity;
+        return dbCity;
     }
 
     private City saveCityInDb(String cityName) {
         try {
-            WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
+            WeatherApiResponse response = weatherIntegrationService.getWeatherByCityName(cityName);
 
             City city = new City(response.getCityName(), response.getTemperature());
             cityRepository.save(city);
@@ -51,7 +55,7 @@ import java.time.temporal.ChronoUnit;
 
     private City updateCityDb(City city, String cityName) {
         try {
-            WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
+            WeatherApiResponse response = weatherIntegrationService.getWeatherByCityName(cityName);
 
             city.setTemperature(response.getTemperature());
             city.setCreatedAt(LocalDateTime.now());
@@ -59,11 +63,6 @@ import java.time.temporal.ChronoUnit;
         } catch (Exception e) {
             throw new RuntimeException("Не удалось обновить данные погоды для города: " + cityName, e);
         }
-    }
-
-    private boolean isCacheExpired(LocalDateTime createdAt, Long cacheDuration) {
-        long betweenHours = ChronoUnit.HOURS.between(createdAt, LocalDateTime.now());
-        return betweenHours > cacheDuration;
     }
 
 }
