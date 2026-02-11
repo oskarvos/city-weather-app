@@ -1,9 +1,11 @@
-package com.oskarvos.cityweatherapp.model.dto;
+package com.oskarvos.cityweatherapp.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.oskarvos.cityweatherapp.validation.name.CityNameValidator;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)  // скрыть поля null в ответе (конструктор)
 @JsonPropertyOrder({"id", "cityName", "temperature"})
@@ -14,6 +16,7 @@ public class CityResponse {
     private Double temperature;
     private LocalDateTime createdAt;
     private String info;
+    private List<CityNameValidator> errors;
 
     public CityResponse() {
     }
@@ -38,6 +41,10 @@ public class CityResponse {
         this.cityName = null;
         this.temperature = null;
         this.info = info;
+    }
+
+    private CityResponse(List<CityNameValidator> errors) {
+        this.errors = errors;
     }
 
     public Long getId() {
@@ -78,6 +85,14 @@ public class CityResponse {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public List<CityNameValidator> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<CityNameValidator> errors) {
+        this.errors = errors;
     }
 
 }

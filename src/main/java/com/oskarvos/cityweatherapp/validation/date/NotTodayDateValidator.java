@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
-public class NotTodayDateCityNameValidator implements DateValidator {
+public class NotTodayDateValidator implements DateValidator {
 
     @Override
     public boolean validate(LocalDateTime createdAt) {

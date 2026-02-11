@@ -1,6 +1,6 @@
 package com.oskarvos.cityweatherapp.repository;
 
-import com.oskarvos.cityweatherapp.model.entity.City;
+import com.oskarvos.cityweatherapp.entity.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

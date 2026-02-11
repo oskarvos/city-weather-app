@@ -1,4 +1,4 @@
-package com.oskarvos.cityweatherapp.model.entity;
+package com.oskarvos.cityweatherapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

@@ -1,7 +1,7 @@
 package com.oskarvos.cityweatherapp.controller;
 
-import com.oskarvos.cityweatherapp.model.dto.CityListResponse;
-import com.oskarvos.cityweatherapp.model.dto.CityResponse;
+import com.oskarvos.cityweatherapp.dto.response.CityListResponse;
+import com.oskarvos.cityweatherapp.dto.response.CityResponse;
 import com.oskarvos.cityweatherapp.service.CityService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,6 +1,6 @@
-package com.oskarvos.cityweatherapp.model.dto;
+package com.oskarvos.cityweatherapp.dto.response;
 
-import com.oskarvos.cityweatherapp.model.entity.City;
+import com.oskarvos.cityweatherapp.entity.City;
 
 import java.util.List;
 

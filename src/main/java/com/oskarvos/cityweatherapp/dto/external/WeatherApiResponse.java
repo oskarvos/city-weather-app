@@ -1,4 +1,4 @@
-package com.oskarvos.cityweatherapp.model.dto.external;
+package com.oskarvos.cityweatherapp.dto.external;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

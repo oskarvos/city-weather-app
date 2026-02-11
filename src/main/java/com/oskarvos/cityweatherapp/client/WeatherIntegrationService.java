@@ -1,8 +1,8 @@
 package com.oskarvos.cityweatherapp.client;
 
 import com.oskarvos.cityweatherapp.config.WeatherConfig;
+import com.oskarvos.cityweatherapp.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.exception.ValidationException;
-import com.oskarvos.cityweatherapp.model.dto.external.WeatherApiResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;

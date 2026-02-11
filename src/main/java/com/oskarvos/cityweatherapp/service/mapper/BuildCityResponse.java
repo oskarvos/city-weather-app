@@ -1,7 +1,7 @@
-package com.oskarvos.cityweatherapp.model.dto.external;
+package com.oskarvos.cityweatherapp.service.mapper;
 
-import com.oskarvos.cityweatherapp.model.dto.CityResponse;
-import com.oskarvos.cityweatherapp.model.entity.City;
+import com.oskarvos.cityweatherapp.dto.response.CityResponse;
+import com.oskarvos.cityweatherapp.entity.City;
 import org.springframework.stereotype.Component;
 
 @Component
