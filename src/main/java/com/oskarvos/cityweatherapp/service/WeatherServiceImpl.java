@@ -1,6 +1,7 @@
 package com.oskarvos.cityweatherapp.service;
 
 import com.oskarvos.cityweatherapp.client.WeatherIntegrationService;
+import com.oskarvos.cityweatherapp.exception.ValidationException;
 import com.oskarvos.cityweatherapp.model.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.model.entity.City;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
@@ -31,14 +32,23 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     public City getActualWeather(String cityName) {
         cityNameValidator.validate(cityName);
-        City dbCity = cityRepository.findByCityName(cityName);
+        City dbCity = getCityFromDb(cityName);
 
         if (dbCity == null) {
             return saveCityInDb(cityName);
         } else if (dateValidator.validate(dbCity.getCreatedAt())) {
             return updateCityDb(dbCity, cityName);
         }
+
         return dbCity;
+    }
+
+    private City getCityFromDb(String cityName) {
+        try {
+            return cityRepository.findByCityName(cityName);
+        } catch (Exception e) {
+            throw new ValidationException("В БД города не существует!");
+        }
     }
 
     private City saveCityInDb(String cityName) {
@@ -49,7 +59,7 @@ public class WeatherServiceImpl implements WeatherService {
             cityRepository.save(city);
             return city;
         } catch (Exception e) {
-            throw new RuntimeException("Не удалось создать город: " + cityName, e);
+            throw new ValidationException("Не удалось сохранить город в БД город");
         }
     }
 
@@ -61,7 +71,7 @@ public class WeatherServiceImpl implements WeatherService {
             city.setCreatedAt(LocalDateTime.now());
             return cityRepository.save(city);
         } catch (Exception e) {
-            throw new RuntimeException("Не удалось обновить данные погоды для города: " + cityName, e);
+            throw new ValidationException("Не удалось обновить данные погоды для города!");
         }
     }
 
