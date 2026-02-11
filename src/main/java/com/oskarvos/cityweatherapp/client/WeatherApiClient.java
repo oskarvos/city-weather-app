@@ -27,7 +27,7 @@ public class WeatherApiClient { // идет на сервер openweathermap.org
 
             return restTemplate.getForObject(url, WeatherApiResponse.class);
         } catch (HttpClientErrorException.NotFound e) {  // Город не найден в API
-            return null;
+            throw new RuntimeException("Город '" + cityName + "' не найден");
         } catch (Exception e) { // Другие ошибки (таймаут, проблемы с сетью и т.д.)
             throw new RuntimeException("Ошибка при запросе к API погоды", e);
         }

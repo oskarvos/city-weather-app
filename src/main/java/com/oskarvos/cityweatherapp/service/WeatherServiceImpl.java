@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Service
-public class WeatherServiceImpl implements WeatherService {
+    public class WeatherServiceImpl implements WeatherService {
 
     private final CityRepository cityRepository;
     private final WeatherApiClient weatherApiClient;
@@ -27,28 +27,43 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public City getActualWeather(String cityName) {
-        City city = cityRepository.findByCityName(cityName);
-        if (city != null) {
-            long betweenHours = ChronoUnit.HOURS.between(city.getCreatedAt(), LocalDateTime.now());
+        City dbcity = cityRepository.findByCityName(cityName);
 
-            if (betweenHours > weatherConfig.getCacheDuration()) {
-                WeatherApiResponse weatherApiResponse = weatherApiClient.getWeatherByCityName(cityName);
-
-                city.setTemperature(weatherApiResponse.getTemperature());
-                city.setCreatedAt(LocalDateTime.now());
-                cityRepository.save(city);
-                return city;
-            } else {
-                return city;
-            }
-        } else {
-            WeatherApiResponse weatherApiResponse = weatherApiClient.getWeatherByCityName(cityName);
-            City newCity = new City();
-            newCity.setCityName(weatherApiResponse.getCityName());
-            newCity.setTemperature(weatherApiResponse.getTemperature());
-            cityRepository.save(newCity);
-            return newCity;
+        if (dbcity == null) {
+            return saveCityInDb(cityName);
+        } else if (isCacheExpired(dbcity.getCreatedAt(), weatherConfig.getCacheDuration())) {
+            return updateCityDb(dbcity, cityName);
         }
+        return dbcity;
+    }
+
+    private City saveCityInDb(String cityName) {
+        try {
+            WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
+
+            City city = new City(response.getCityName(), response.getTemperature());
+            cityRepository.save(city);
+            return city;
+        } catch (Exception e) {
+            throw new RuntimeException("Не удалось создать город: " + cityName, e);
+        }
+    }
+
+    private City updateCityDb(City city, String cityName) {
+        try {
+            WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
+
+            city.setTemperature(response.getTemperature());
+            city.setCreatedAt(LocalDateTime.now());
+            return cityRepository.save(city);
+        } catch (Exception e) {
+            throw new RuntimeException("Не удалось обновить данные погоды для города: " + cityName, e);
+        }
+    }
+
+    private boolean isCacheExpired(LocalDateTime createdAt, Long cacheDuration) {
+        long betweenHours = ChronoUnit.HOURS.between(createdAt, LocalDateTime.now());
+        return betweenHours > cacheDuration;
     }
 
 }
