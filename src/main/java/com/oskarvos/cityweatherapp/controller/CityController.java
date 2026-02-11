@@ -1,7 +1,6 @@
 package com.oskarvos.cityweatherapp.controller;
 
 import com.oskarvos.cityweatherapp.model.dto.CityListResponse;
-import com.oskarvos.cityweatherapp.model.dto.CityRequest;
 import com.oskarvos.cityweatherapp.model.dto.CityResponse;
 import com.oskarvos.cityweatherapp.service.CityService;
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +23,6 @@ public class CityController {
     @GetMapping("/cities")
     public CityListResponse getCities() {
         return cityService.getAllCities();
-    }
-
-    @PostMapping("/cities")
-    public CityResponse createCity(@RequestBody CityRequest request) {
-        return cityService.createCity(request);
-    }
-
-    @PutMapping("/cities")
-    public CityResponse updateCity(@RequestBody CityRequest request) {
-        return cityService.updateCity(request);
     }
 
     @DeleteMapping("/cities/delete/{cityName}")

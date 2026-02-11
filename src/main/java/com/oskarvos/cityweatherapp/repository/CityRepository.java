@@ -14,10 +14,12 @@ public interface CityRepository extends JpaRepository<City, Long> {
 
     @Query("SELECT c FROM City c " +
             "WHERE c.favoriteCity IS NOT NULL " +
-            "ORDER BY c.favoriteCity.createdAt DESC")
+            "ORDER BY c.createdAt DESC")
     List<City> findFavoriteCitiesOrderByCreatedDateDesc();
 
-    @Query("SELECT c FROM City c WHERE c.favoriteCity IS NULL ORDER BY c.createdAt DESC")
+    @Query("SELECT c FROM City c " +
+            "WHERE c.favoriteCity IS NULL " +
+            "ORDER BY c.createdAt DESC")
     List<City> findNonFavoriteCitiesOrderByCreatedDateDesc();
 
 }
