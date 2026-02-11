@@ -40,7 +40,6 @@ public class CityResponse {
         this.info = info;
     }
 
-
     public Long getId() {
         return id;
     }

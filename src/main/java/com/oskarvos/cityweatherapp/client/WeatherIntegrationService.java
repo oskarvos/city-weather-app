@@ -1,6 +1,7 @@
 package com.oskarvos.cityweatherapp.client;
 
 import com.oskarvos.cityweatherapp.config.WeatherConfig;
+import com.oskarvos.cityweatherapp.exception.ValidationException;
 import com.oskarvos.cityweatherapp.model.dto.external.WeatherApiResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -27,9 +28,9 @@ public class WeatherIntegrationService { // идет на сервер openweath
 
             return restTemplate.getForObject(url, WeatherApiResponse.class);
         } catch (HttpClientErrorException.NotFound e) {  // Город не найден в API
-            throw new RuntimeException("Город '" + cityName + "' не найден");
+            throw new ValidationException("Город не найден в API");
         } catch (Exception e) { // Другие ошибки (таймаут, проблемы с сетью и т.д.)
-            throw new RuntimeException("Ошибка при запросе к API погоды", e);
+            throw new ValidationException("Ошибка при запросе к API погоды (таймаут, проблемы с сетью и т.д.)");
         }
     }
 
