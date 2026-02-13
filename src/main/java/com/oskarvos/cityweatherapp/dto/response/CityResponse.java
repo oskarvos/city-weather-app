@@ -2,7 +2,6 @@ package com.oskarvos.cityweatherapp.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.oskarvos.cityweatherapp.validation.name.CityNameValidator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +15,7 @@ public class CityResponse {
     private Double temperature;
     private LocalDateTime createdAt;
     private String info;
-    private List<CityNameValidator> errors;
+    private List<ValidationError> validationErrors;
 
     public CityResponse() {
     }
@@ -43,8 +42,8 @@ public class CityResponse {
         this.info = info;
     }
 
-    private CityResponse(List<CityNameValidator> errors) {
-        this.errors = errors;
+    public CityResponse(List<ValidationError> validationErrors) {
+        this.validationErrors = validationErrors;
     }
 
     public Long getId() {
@@ -87,12 +86,12 @@ public class CityResponse {
         this.info = info;
     }
 
-    public List<CityNameValidator> getErrors() {
-        return errors;
+    public List<ValidationError> getValidationErrors() {
+        return validationErrors;
     }
 
-    public void setErrors(List<CityNameValidator> errors) {
-        this.errors = errors;
+    public void setValidationErrors(List<ValidationError> validationErrors) {
+        this.validationErrors = validationErrors;
     }
 
 }

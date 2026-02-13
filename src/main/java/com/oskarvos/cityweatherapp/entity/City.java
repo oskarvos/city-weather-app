@@ -21,8 +21,8 @@ public class City {
     @Column(name = "temperature", nullable = false)
     private Double temperature;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToOne(mappedBy = "city")
     @JsonIgnore // поле игнорируется и не попадает в JSON (решаем циклическую зависимость в JSON)
@@ -61,11 +61,11 @@ public class City {
     }
 
     public LocalDateTime getCreatedAt() {
-        return createdAt;
+        return updatedAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public FavoriteCity getFavoriteCity() {

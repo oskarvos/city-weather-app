@@ -1,12 +1,11 @@
 package com.oskarvos.cityweatherapp.service;
 
-import com.oskarvos.cityweatherapp.client.WeatherIntegrationService;
+import com.oskarvos.cityweatherapp.client.WeatherApiClient;
 import com.oskarvos.cityweatherapp.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.entity.City;
-import com.oskarvos.cityweatherapp.exception.ValidationException;
+import com.oskarvos.cityweatherapp.exception.DatabaseException;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
 import com.oskarvos.cityweatherapp.validation.date.DateValidator;
-import com.oskarvos.cityweatherapp.validation.name.CityNameValidator;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,22 +14,18 @@ import java.time.LocalDateTime;
 public class WeatherService {
 
     private final CityRepository cityRepository;
-    private final WeatherIntegrationService weatherIntegrationService;
-    private final CityNameValidator cityNameValidator;
+    private final WeatherApiClient weatherApiClient;
     private final DateValidator dateValidator;
 
     public WeatherService(CityRepository cityRepository,
-                          WeatherIntegrationService weatherIntegrationService,
-                          CityNameValidator cityNameValidator,
+                          WeatherApiClient weatherApiClient,
                           DateValidator dateValidator) {
         this.cityRepository = cityRepository;
-        this.weatherIntegrationService = weatherIntegrationService;
-        this.cityNameValidator = cityNameValidator;
+        this.weatherApiClient = weatherApiClient;
         this.dateValidator = dateValidator;
     }
 
     public City getActualWeather(String cityName) {
-        cityNameValidator.validate(cityName);
         City dbCity = getCityFromDb(cityName);
 
         if (dbCity == null) {
@@ -43,34 +38,29 @@ public class WeatherService {
     }
 
     private City getCityFromDb(String cityName) {
-        try {
-            return cityRepository.findByCityName(cityName);
-        } catch (Exception e) {
-            throw new ValidationException("В БД города не существует!");
-        }
+        return cityRepository.findByCityName(cityName);
     }
 
     private City saveCityInDb(String cityName) {
-        try {
-            WeatherApiResponse response = weatherIntegrationService.getWeatherByCityName(cityName);
+        WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
 
-            City city = new City(response.getCityName(), response.getTemperature());
-            cityRepository.save(city);
-            return city;
+        try {
+            City city = new City(cityName, response.getTemperature());
+            return cityRepository.save(city);
         } catch (Exception e) {
-            throw new ValidationException("Не удалось сохранить город в БД город");
+            throw new DatabaseException("Не удалось сохранить город в БД город", e);
         }
     }
 
     private City updateCityDb(City city, String cityName) {
-        try {
-            WeatherApiResponse response = weatherIntegrationService.getWeatherByCityName(cityName);
+        WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
 
+        try {
             city.setTemperature(response.getTemperature());
             city.setCreatedAt(LocalDateTime.now());
             return cityRepository.save(city);
         } catch (Exception e) {
-            throw new ValidationException("Не удалось обновить данные погоды для города!");
+            throw new DatabaseException("Не удалось обновить данные погоды для города!", e);
         }
     }
 

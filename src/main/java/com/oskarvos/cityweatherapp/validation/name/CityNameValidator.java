@@ -1,7 +1,11 @@
 package com.oskarvos.cityweatherapp.validation.name;
 
+import com.oskarvos.cityweatherapp.dto.response.ValidationError;
+
+import java.util.Optional;
+
 public interface CityNameValidator {
 
-    void validate(String cityName);
+    Optional<ValidationError> validate(String cityName);
 
 }
