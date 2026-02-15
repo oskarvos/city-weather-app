@@ -1,4 +1,4 @@
-package com.oskarvos.cityweatherapp.model.entity;
+package com.oskarvos.cityweatherapp.entity;
 
 import jakarta.persistence.*;
 

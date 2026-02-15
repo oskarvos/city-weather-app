@@ -1,69 +1,53 @@
 package com.oskarvos.cityweatherapp.service;
 
-import com.oskarvos.cityweatherapp.client.WeatherApiClient;
-import com.oskarvos.cityweatherapp.config.WeatherConfig;
-import com.oskarvos.cityweatherapp.model.dto.external.WeatherApiResponse;
-import com.oskarvos.cityweatherapp.model.entity.City;
-import com.oskarvos.cityweatherapp.repository.CityRepository;
+import com.oskarvos.cityweatherapp.entity.City;
+import com.oskarvos.cityweatherapp.exception.DatabaseException;
+import com.oskarvos.cityweatherapp.exception.WeatherApiConnectionException;
+import com.oskarvos.cityweatherapp.validation.date.DateValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-
 @Service
-    public class WeatherServiceImpl implements WeatherService {
+public class WeatherServiceImpl implements WeatherService {
 
-    private final CityRepository cityRepository;
-    private final WeatherApiClient weatherApiClient;
-    private final WeatherConfig weatherConfig;
+    private static final Logger log = LoggerFactory.getLogger(WeatherServiceImpl.class);
 
-    public WeatherServiceImpl(CityRepository cityRepository,
-                              WeatherApiClient weatherApiClient,
-                              WeatherConfig weatherConfig) {
-        this.cityRepository = cityRepository;
-        this.weatherApiClient = weatherApiClient;
-        this.weatherConfig = weatherConfig;
+    private final DateValidator dateValidator;
+    private final CityRepositoryServiceImpl cityRepositoryService;
+
+    public WeatherServiceImpl(DateValidator dateValidator,
+                              CityRepositoryServiceImpl cityRepositoryService) {
+        this.dateValidator = dateValidator;
+        this.cityRepositoryService = cityRepositoryService;
     }
 
     @Override
     public City getActualWeather(String cityName) {
-        City dbcity = cityRepository.findByCityName(cityName);
+        log.info("Получение погоды для города: {}", cityName);
+        City dbCity = cityRepositoryService.getCityFromDb(cityName);
 
-        if (dbcity == null) {
-            return saveCityInDb(cityName);
-        } else if (isCacheExpired(dbcity.getCreatedAt(), weatherConfig.getCacheDuration())) {
-            return updateCityDb(dbcity, cityName);
+        if (dbCity == null) {
+            log.debug("Город {} не найден в БД, сохраняем новый", cityName);
+            return cityRepositoryService.saveCityInDb(cityName);
         }
-        return dbcity;
-    }
 
-    private City saveCityInDb(String cityName) {
-        try {
-            WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
-
-            City city = new City(response.getCityName(), response.getTemperature());
-            cityRepository.save(city);
-            return city;
-        } catch (Exception e) {
-            throw new RuntimeException("Не удалось создать город: " + cityName, e);
+        if (dateValidator.validate(dbCity.getUpdatedAt())) {
+            try {
+                log.info("Обновление устаревших данных для города: {}", cityName);
+                return cityRepositoryService.updateCityDb(dbCity);
+            } catch (WeatherApiConnectionException e) {
+                log.warn("Не удалось обновить данные для города {}, возвращаем устаревшие: {}", cityName, e.getMessage());
+                return dbCity;
+            } catch (DatabaseException e) {
+                // Ошибка сохранения после успешного получения данных – тоже возвращаем старое
+                log.warn("Ошибка сохранения обновлённых данных для {}, возвращаем устаревшие: {}", cityName, e.getMessage());
+                return dbCity;
+            }
         }
-    }
 
-    private City updateCityDb(City city, String cityName) {
-        try {
-            WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
-
-            city.setTemperature(response.getTemperature());
-            city.setCreatedAt(LocalDateTime.now());
-            return cityRepository.save(city);
-        } catch (Exception e) {
-            throw new RuntimeException("Не удалось обновить данные погоды для города: " + cityName, e);
-        }
-    }
-
-    private boolean isCacheExpired(LocalDateTime createdAt, Long cacheDuration) {
-        long betweenHours = ChronoUnit.HOURS.between(createdAt, LocalDateTime.now());
-        return betweenHours > cacheDuration;
+        log.debug("Город {} найден в БД, данные актуальны", cityName);
+        return dbCity;
     }
 
 }

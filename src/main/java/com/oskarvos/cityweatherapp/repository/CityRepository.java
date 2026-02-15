@@ -1,6 +1,6 @@
 package com.oskarvos.cityweatherapp.repository;
 
-import com.oskarvos.cityweatherapp.model.entity.City;
+import com.oskarvos.cityweatherapp.entity.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,12 +14,12 @@ public interface CityRepository extends JpaRepository<City, Long> {
 
     @Query("SELECT c FROM City c " +
             "WHERE c.favoriteCity IS NOT NULL " +
-            "ORDER BY c.createdAt DESC")
+            "ORDER BY c.updatedAt DESC")
     List<City> findFavoriteCitiesOrderByCreatedDateDesc();
 
     @Query("SELECT c FROM City c " +
             "WHERE c.favoriteCity IS NULL " +
-            "ORDER BY c.createdAt DESC")
+            "ORDER BY c.updatedAt DESC")
     List<City> findNonFavoriteCitiesOrderByCreatedDateDesc();
 
 }

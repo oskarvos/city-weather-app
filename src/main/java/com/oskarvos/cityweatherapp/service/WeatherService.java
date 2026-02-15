@@ -1,6 +1,6 @@
 package com.oskarvos.cityweatherapp.service;
 
-import com.oskarvos.cityweatherapp.model.entity.City;
+import com.oskarvos.cityweatherapp.entity.City;
 
 public interface WeatherService {
 

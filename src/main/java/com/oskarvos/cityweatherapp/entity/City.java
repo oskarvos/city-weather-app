@@ -1,4 +1,4 @@
-package com.oskarvos.cityweatherapp.model.entity;
+package com.oskarvos.cityweatherapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -21,8 +21,8 @@ public class City {
     @Column(name = "temperature", nullable = false)
     private Double temperature;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToOne(mappedBy = "city")
     @JsonIgnore // поле игнорируется и не попадает в JSON (решаем циклическую зависимость в JSON)
@@ -60,12 +60,12 @@ public class City {
         this.temperature = temperature;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public FavoriteCity getFavoriteCity() {
