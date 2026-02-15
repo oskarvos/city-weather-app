@@ -18,11 +18,11 @@ public class ValidationError {
         this.field = field;
     }
 
-    public String getMassage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMassage(String message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 
