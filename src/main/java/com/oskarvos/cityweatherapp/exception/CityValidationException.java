@@ -9,6 +9,7 @@ public class CityValidationException extends RuntimeException {
     private final List<ValidationError> errors;
 
     public CityValidationException(List<ValidationError> errors) {
+        super("Ошибки валидации");
         this.errors = errors;
     }
 

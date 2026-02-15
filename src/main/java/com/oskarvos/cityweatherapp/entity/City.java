@@ -60,11 +60,11 @@ public class City {
         this.temperature = temperature;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setCreatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 

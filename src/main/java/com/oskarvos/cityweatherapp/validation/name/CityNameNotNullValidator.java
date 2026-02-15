@@ -5,6 +5,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+/**
+ * Валидатор проверяет, что название города не является null и не пустое.
+ * Примеры нарушений: null, "", "   "
+ */
 @Component
 public class CityNameNotNullValidator implements CityNameValidator {
 

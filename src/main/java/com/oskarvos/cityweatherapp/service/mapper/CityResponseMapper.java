@@ -5,6 +5,7 @@ import com.oskarvos.cityweatherapp.dto.response.ValidationError;
 import com.oskarvos.cityweatherapp.entity.City;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -22,8 +23,10 @@ public class CityResponseMapper {
                 city.getId(),
                 city.getCityName(),
                 city.getTemperature(),
-                city.getCreatedAt(),
-                "Данные температуры не актуальны!");
+                city.getUpdatedAt(),
+                String.format("Нет связи с API погоды, температура в городе %s актуальна на %s",
+                        city.getCityName(),
+                        city.getUpdatedAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))));
     }
 
     public CityResponse buildDeleteCity(City city) {
@@ -31,7 +34,7 @@ public class CityResponseMapper {
                 city.getId(),
                 city.getCityName(),
                 city.getTemperature(),
-                city.getCreatedAt(),
+                city.getUpdatedAt(),
                 "Город из БД удален!");
     }
 
