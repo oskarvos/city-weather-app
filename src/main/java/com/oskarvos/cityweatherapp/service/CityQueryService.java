@@ -48,4 +48,8 @@ public class CityQueryService {
         return new CityListResponse(favoriteCities, nonFavoriteCities);
     }
 
+    public CityListResponse getFavoriteCities() {
+        return new CityListResponse(cityRepository.findFavoriteCitiesOrderByCreatedDateDesc(), List.of());
+    }
+
 }
