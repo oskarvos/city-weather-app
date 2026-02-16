@@ -13,18 +13,18 @@ public class CityResponse {
     private Long id;
     private String cityName;
     private Double temperature;
-    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String info;
     private List<ValidationError> validationErrors;
 
     public CityResponse() {
     }
 
-    public CityResponse(Long id, String cityName, Double temperature, LocalDateTime createdAt, String info) {
+    public CityResponse(Long id, String cityName, Double temperature, LocalDateTime updatedAt, String info) {
         this.id = id;
         this.cityName = cityName;
         this.temperature = temperature;
-        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.info = info;
     }
 
@@ -70,12 +70,12 @@ public class CityResponse {
         this.temperature = temperature;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getInfo() {
