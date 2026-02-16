@@ -19,7 +19,7 @@ class CityNameNotNullValidatorTest {
 
     @Test
     @DisplayName("Валидное название города - ошибки нет")
-    void validCityName_ShouldReturnEmpty() {
+    void validCityNameShouldReturnEmpty() {
         String validName = "London";
 
         Optional<ValidationError> result = validator.validate(validName);
@@ -29,7 +29,7 @@ class CityNameNotNullValidatorTest {
 
     @Test
     @DisplayName("Null название города - возвращает ошибку")
-    void nullCityName_ShouldReturnError() {
+    void nullCityNameShouldReturnError() {
         String nullName = null;
 
         Optional<ValidationError> result = validator.validate(nullName);
@@ -41,7 +41,7 @@ class CityNameNotNullValidatorTest {
 
     @Test
     @DisplayName("Пустая строка - возвращает ошибку")
-    void emptyCityName_ShouldReturnError() {
+    void emptyCityNameShouldReturnError() {
         String emptyName = "";
 
         Optional<ValidationError> result = validator.validate(emptyName);
@@ -52,7 +52,7 @@ class CityNameNotNullValidatorTest {
 
     @Test
     @DisplayName("Строка из пробелов - возвращает ошибку")
-    void blankCityName_ShouldReturnError() {
+    void blankCityNameShouldReturnError() {
         String blankName = "   ";
 
         Optional<ValidationError> result = validator.validate(blankName);
