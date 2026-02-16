@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    container_name: weather-app
+    network_mode: "host"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/weather_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: "2223399z"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+
+networks:
+  weather-network:
+    driver: bridge
