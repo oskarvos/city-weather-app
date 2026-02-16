@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -60,9 +62,15 @@ public class CityController {
     }
 
     @GetMapping("/cities")
-    public ResponseEntity<CityListResponse> getCities() {
+    public ResponseEntity<CityListResponse> getCities(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("Получен запрос на поиск всех городов из БД");
-        return ResponseEntity.ok(cityQueryService.getAllCities());
+
+        boolean isAdmin = userDetails.getAuthorities().stream()
+                .anyMatch(authz -> authz.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return ResponseEntity.ok(cityQueryService.getAllCities());
+        } else return ResponseEntity.ok(cityQueryService.getFavoriteCities());
     }
 
     @DeleteMapping("/cities/delete/{cityName}")

@@ -40,7 +40,6 @@ public class WeatherServiceImpl implements WeatherService {
                 log.warn("Не удалось обновить данные для города {}, возвращаем устаревшие: {}", cityName, e.getMessage());
                 return dbCity;
             } catch (DatabaseException e) {
-                // Ошибка сохранения после успешного получения данных – тоже возвращаем старое
                 log.warn("Ошибка сохранения обновлённых данных для {}, возвращаем устаревшие: {}", cityName, e.getMessage());
                 return dbCity;
             }
