@@ -2,6 +2,7 @@ package com.oskarvos.cityweatherapp.service;
 
 import com.oskarvos.cityweatherapp.dto.response.ValidationError;
 import com.oskarvos.cityweatherapp.exception.CityValidationException;
+import com.oskarvos.cityweatherapp.util.CityNameNormalizer;
 import com.oskarvos.cityweatherapp.validation.name.CityNameValidator;
 import org.springframework.stereotype.Service;
 
@@ -12,23 +13,25 @@ import java.util.Optional;
 public class CityNameValidationService {
 
     private final List<CityNameValidator> validators;
+    private final CityNameNormalizer cityNameNormalizer;
 
-    public CityNameValidationService(List<CityNameValidator> validators) {
+    public CityNameValidationService(List<CityNameValidator> validators,
+                                     CityNameNormalizer cityNameNormalizer) {
         this.validators = validators;
+        this.cityNameNormalizer = cityNameNormalizer;
     }
 
     public String normalizeAndValidate(String cityName) {
-        String normalized = normalize(cityName);
-        List<ValidationError> errors = collectErrors(normalized);
-        if (!errors.isEmpty()) {
-            throw new CityValidationException(errors);
-        }
+        String normalized = cityNameNormalizer.normalizer(cityName);
+        validateOrThrow(normalized);
         return normalized;
     }
 
-    private String normalize(String cityName) {
-        if (cityName == null) return null;
-        return cityName.trim().replaceAll("\\s+", " ");
+    private void validateOrThrow(String cityName) {
+        List<ValidationError> errors = collectErrors(cityName);
+        if (!errors.isEmpty()) {
+            throw new CityValidationException(errors);
+        }
     }
 
     private List<ValidationError> collectErrors(String cityName) {

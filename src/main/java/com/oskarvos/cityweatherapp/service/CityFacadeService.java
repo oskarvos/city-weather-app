@@ -23,11 +23,14 @@ public class CityFacadeService {
 
     private final CityQueryService cityQueryService;
     private final CityDeleteService cityDeleteService;
+    private final CityListingService cityListingService;
 
     public CityFacadeService(CityQueryService cityQueryService,
-                             CityDeleteService cityDeleteService) {
+                             CityDeleteService cityDeleteService,
+                             CityListingService cityListingService) {
         this.cityQueryService = cityQueryService;
         this.cityDeleteService = cityDeleteService;
+        this.cityListingService = cityListingService;
     }
 
     public ResponseEntity<?> getCityName(String cityName) {
@@ -64,8 +67,10 @@ public class CityFacadeService {
                 .anyMatch(authz -> authz.getAuthority().equals("ROLE_ADMIN"));
 
         if (isAdmin) {
-            return ResponseEntity.ok(cityQueryService.getAllCities());
-        } else return ResponseEntity.ok(cityQueryService.getFavoriteCities());
+            return ResponseEntity.ok(cityListingService.getAllCities());
+        } else {
+            return ResponseEntity.ok(cityListingService.getFavoriteCities());
+        }
     }
 
     public ResponseEntity<?> deleteCity(String cityName) {

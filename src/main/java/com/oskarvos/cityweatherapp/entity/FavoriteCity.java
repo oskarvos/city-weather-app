@@ -22,9 +22,6 @@ public class FavoriteCity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public FavoriteCity() {
-    }
-
     public Long getId() {
         return id;
     }
