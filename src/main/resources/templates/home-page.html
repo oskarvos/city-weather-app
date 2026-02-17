@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div>
+            <h2>Добро пожаловать, <span th:text="${username}"></span>!</h2>
+            <p th:if="${isAdmin}" class="role-badge admin">Администратор</p>
+            <p th:unless="${isAdmin}" class="role-badge user">Пользователь</p>
+        </div>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit" class="logout-btn">Выйти</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <div>
+        <input type="text" id="cityInput" placeholder="Введите город" />
+        <button id="getWeatherBtn">Узнать погоду</button>
+        <button id="getAllBtn">Все города</button>
+        <button id="deleteBtn" th:if="${isAdmin}" class="danger">Удалить город</button>
+    </div>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+    const cityInput = document.getElementById('cityInput');
+    const getWeatherBtn = document.getElementById('getWeatherBtn');
+    const getAllBtn = document.getElementById('getAllBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const resultDiv = document.getElementById('result');
+
+    async function fetchApi(url, options = {}) {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        return { response, data };
+    }
+
+    function displayResult(content) {
+        resultDiv.innerHTML = content;
+    }
+
+    getWeatherBtn.addEventListener('click', async () => {
+        const city = cityInput.value.trim();
+        if (!city) {
+            displayResult('<p class="error">Введите название города</p>');
+            return;
+        }
+        const { response, data } = await fetchApi(`/api/cities/name/${encodeURIComponent(city)}`);
+        if (response.ok) {
+            let html = `<h3>Город: ${data.cityName}</h3>`;
+            html += `<p>Температура: ${data.temperature}°C</p>`;
+            if (data.updatedAt) {
+                html += `<p>Обновлено: ${new Date(data.updatedAt).toLocaleString()}</p>`;
+            }
+            if (data.info) {
+                html += `<p class="warning">${data.info}</p>`;
+            }
+            displayResult(html);
+        } else if (response.status === 400 && data.details) {
+            let errors = '<ul>';
+            data.details.forEach(err => {
+                errors += `<li>${err.field}: ${err.message}</li>`;
+            });
+            errors += '</ul>';
+            displayResult(`<div class="error">Ошибка валидации: ${errors}</div>`);
+        } else if (response.status === 404) {
+            displayResult(`<p class="error">${data.error || 'Город не найден'}</p>`);
+        } else {
+            displayResult(`<p class="error">Ошибка: ${data.error || 'Неизвестная ошибка'}</p>`);
+        }
+    });
+
+    getAllBtn.addEventListener('click', async () => {
+        const { response, data } = await fetchApi('/api/cities');
+        if (response.ok) {
+            let html = '<h3>Список городов</h3>';
+            if (data.favoriteCities && data.favoriteCities.length > 0) {
+                html += '<h4>Избранные:</h4><ul>';
+                data.favoriteCities.forEach(city => {
+                    html += `<li>${city.cityName} — ${city.temperature}°C</li>`;
+                });
+                html += '</ul>';
+            }
+            if (data.cities && data.cities.length > 0) {
+                html += '<h4>Все города:</h4><ul>';
+                data.cities.forEach(city => {
+                    html += `<li>${city.cityName} — ${city.temperature}°C</li>`;
+                });
+                html += '</ul>';
+            }
+            if ((!data.favoriteCities || data.favoriteCities.length === 0) && (!data.cities || data.cities.length === 0)) {
+                html += '<p>Городов нет</p>';
+            }
+            displayResult(html);
+        } else {
+            displayResult(`<p class="error">Ошибка загрузки списка</p>`);
+        }
+    });
+
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', async () => {
+            const city = cityInput.value.trim();
+            if (!city) {
+                displayResult('<p class="error">Введите название города для удаления</p>');
+                return;
+            }
+            const { response, data } = await fetchApi(`/api/cities/delete/${encodeURIComponent(city)}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                displayResult(`<p class="success">Город ${data.cityName} удалён</p>`);
+            } else if (response.status === 400 && data.details) {
+                let errors = '<ul>';
+                data.details.forEach(err => {
+                    errors += `<li>${err.field}: ${err.message}</li>`;
+                });
+                errors += '</ul>';
+                displayResult(`<div class="error">Ошибка валидации: ${errors}</div>`);
+            } else if (response.status === 404) {
+                displayResult(`<p class="error">${data.error || 'Город не найден'}</p>`);
+            } else {
+                displayResult(`<p class="error">Ошибка удаления</p>`);
+            }
+        });
+    }
+</script>
+</body>
+</html>

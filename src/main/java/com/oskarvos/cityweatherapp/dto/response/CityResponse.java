@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)  // скрыть поля null в ответе (конструктор)
 @JsonPropertyOrder({"id", "cityName", "temperature"})
@@ -32,26 +33,10 @@ public class CityResponse {
         this.id = id;
         this.cityName = cityName;
         this.temperature = temperature;
-        this.info = null;
-    }
-
-    public CityResponse(String info) {
-        this.id = null;
-        this.cityName = null;
-        this.temperature = null;
-        this.info = info;
-    }
-
-    public CityResponse(List<ValidationError> validationErrors) {
-        this.validationErrors = validationErrors;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCityName() {
@@ -66,32 +51,32 @@ public class CityResponse {
         return temperature;
     }
 
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public String getInfo() {
         return info;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
     public List<ValidationError> getValidationErrors() {
         return validationErrors;
     }
 
-    public void setValidationErrors(List<ValidationError> validationErrors) {
-        this.validationErrors = validationErrors;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CityResponse response = (CityResponse) o;
+        return Objects.equals(id, response.id)
+                && Objects.equals(cityName, response.cityName)
+                && Objects.equals(temperature, response.temperature)
+                && Objects.equals(updatedAt, response.updatedAt)
+                && Objects.equals(info, response.info)
+                && Objects.equals(validationErrors, response.validationErrors);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cityName, temperature, updatedAt, info, validationErrors);
+    }
 }
