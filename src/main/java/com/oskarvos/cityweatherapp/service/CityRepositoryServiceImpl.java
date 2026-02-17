@@ -1,6 +1,5 @@
 package com.oskarvos.cityweatherapp.service;
 
-import com.oskarvos.cityweatherapp.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.entity.City;
 import com.oskarvos.cityweatherapp.exception.DatabaseException;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
@@ -17,12 +16,9 @@ public class CityRepositoryServiceImpl implements CityRepositoryService {
     private static final Logger log = LoggerFactory.getLogger(CityRepositoryServiceImpl.class);
 
     private final CityRepository cityRepository;
-    private final WeatherApiService weatherApiService;
 
-    public CityRepositoryServiceImpl(CityRepository cityRepository,
-                                     WeatherApiService weatherApiService) {
+    public CityRepositoryServiceImpl(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
-        this.weatherApiService = weatherApiService;
     }
 
     @Override
@@ -38,11 +34,9 @@ public class CityRepositoryServiceImpl implements CityRepositoryService {
 
     @Override
     @Transactional
-    public City saveCityInDb(String cityName) {
-        WeatherApiResponse response = weatherApiService.sendRequestWeatherApiClient(cityName);
-
+    public City saveCityInDb(String cityName, Double temperature) {
         try {
-            City city = new City(cityName, response.getTemperature());
+            City city = new City(cityName, temperature);
             log.info("Город {} успешно сохранен в БД", cityName);
             return cityRepository.save(city);
         } catch (Exception e) {
@@ -53,11 +47,9 @@ public class CityRepositoryServiceImpl implements CityRepositoryService {
 
     @Override
     @Transactional
-    public City updateCityDb(City city) {
-        WeatherApiResponse response = weatherApiService.sendRequestWeatherApiClient(city.getCityName());
-
+    public City updateCityDb(City city, Double temperature) {
         try {
-            city.setTemperature(response.getTemperature());
+            city.setTemperature(temperature);
             city.setUpdatedAt(LocalDateTime.now());
             City updateCity = cityRepository.save(city);
             log.info("Данные для города {} успешно обновлены", city.getCityName());

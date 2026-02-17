@@ -2,8 +2,8 @@ package com.oskarvos.cityweatherapp.validation.date;
 
 import java.time.LocalDateTime;
 
-public interface DateValidator {
+public interface OutdatedChecker {
 
-    boolean validate(LocalDateTime createdAt);
+    boolean isOutdated(LocalDateTime createdAt);
 
 }

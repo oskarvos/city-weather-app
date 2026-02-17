@@ -1,55 +1,47 @@
 package com.oskarvos.cityweatherapp.service;
 
-import com.oskarvos.cityweatherapp.dto.response.CityListResponse;
 import com.oskarvos.cityweatherapp.dto.response.CityResponse;
 import com.oskarvos.cityweatherapp.entity.City;
-import com.oskarvos.cityweatherapp.repository.CityRepository;
 import com.oskarvos.cityweatherapp.service.mapper.CityResponseMapper;
-import com.oskarvos.cityweatherapp.validation.date.DateValidator;
+import com.oskarvos.cityweatherapp.validation.date.OutdatedChecker;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CityQueryService {
 
-    private final WeatherServiceImpl weatherService;
-    private final DateValidator dateValidator;
+    private final WeatherService weatherService;
+    private final OutdatedChecker outdatedChecker;
     private final CityResponseMapper cityResponseMapper;
     private final CityNameValidationService cityNameValidationService;
-    private final CityRepository cityRepository;
 
-    public CityQueryService(WeatherServiceImpl weatherService,
-                            DateValidator dateValidator,
+    public CityQueryService(WeatherService weatherService,
+                            OutdatedChecker outdatedChecker,
                             CityResponseMapper cityResponseMapper,
-                            CityNameValidationService cityNameValidationService,
-                            CityRepository cityRepository) {
+                            CityNameValidationService cityNameValidationService) {
         this.weatherService = weatherService;
-        this.dateValidator = dateValidator;
+        this.outdatedChecker = outdatedChecker;
         this.cityResponseMapper = cityResponseMapper;
         this.cityNameValidationService = cityNameValidationService;
-        this.cityRepository = cityRepository;
     }
 
     public CityResponse getCityByName(String cityName) {
-        String normalizeCityName = cityNameValidationService.normalizeAndValidate(cityName);
-
-        City city = weatherService.getActualWeather(normalizeCityName); // получаем город от сервера погоды
-
-        if (dateValidator.validate(city.getUpdatedAt())) { // проверяем устаревшие ли данные (если устаревшая)
-            return cityResponseMapper.buildWithWarning(city); // выбрасываем старые данные, с пометкой "устаревшие"
-        }
-        return cityResponseMapper.buildValid(city);
+        String normalizeCityName = normalizeCityName(cityName);
+        City city = getActualWeather(normalizeCityName); // получаем город от сервера погоды
+        return outdateChecker(city);
     }
 
-    public CityListResponse getAllCities() {
-        List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
-        List<City> nonFavoriteCities = cityRepository.findNonFavoriteCitiesOrderByCreatedDateDesc();
-        return new CityListResponse(favoriteCities, nonFavoriteCities);
+    private String normalizeCityName(String cityName) {
+        return cityNameValidationService.normalizeAndValidate(cityName);
     }
 
-    public CityListResponse getFavoriteCities() {
-        return new CityListResponse(cityRepository.findFavoriteCitiesOrderByCreatedDateDesc(), List.of());
+    private City getActualWeather(String cityName) {
+        return weatherService.getActualWeather(cityName);
+    }
+
+    private CityResponse outdateChecker(City city) {
+        return outdatedChecker.isOutdated(city.getUpdatedAt())
+                ? cityResponseMapper.buildWithWarning(city)
+                : cityResponseMapper.buildValid(city);
     }
 
 }

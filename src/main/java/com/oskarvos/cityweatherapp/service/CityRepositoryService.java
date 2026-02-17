@@ -6,8 +6,8 @@ public interface CityRepositoryService {
 
     City getCityFromDb(String cityName);
 
-    City saveCityInDb(String cityName);
+    City saveCityInDb(String cityName, Double temperature);
 
-    City updateCityDb(City city);
+    City updateCityDb(City city, Double temperature);
 
 }

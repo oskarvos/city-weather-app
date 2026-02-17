@@ -26,13 +26,24 @@ public class CityDeleteService {
 
     @Transactional
     public CityResponse deleteCityByName(String cityName) {
-        String normalizeCityName = cityNameValidationService.normalizeAndValidate(cityName);
+        String normalizeCityName = normalizeCityName(cityName);
+        City city = findCityFromDb(normalizeCityName);
+        return deleteCityFromDb(city);
+    }
 
-        City city = cityRepository.findByCityName(normalizeCityName);
+    private String normalizeCityName(String cityName) {
+        return cityNameValidationService.normalizeAndValidate(cityName);
+    }
+
+    private City findCityFromDb(String cityName) {
+        City city = cityRepository.findByCityName(cityName);
         if (city == null) {
             throw new CityNotFoundException("Город с таким названием не найден");
         }
+        return city;
+    }
 
+    private CityResponse deleteCityFromDb(City city) {
         try {
             cityRepository.delete(city);
             return cityResponseMapper.buildDeleteCity(city);
