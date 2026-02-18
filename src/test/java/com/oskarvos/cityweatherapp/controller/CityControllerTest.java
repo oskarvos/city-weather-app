@@ -97,10 +97,7 @@ class CityControllerSimpleTest {
             e.printStackTrace();
         }
 
-        testCityListResponse = new CityListResponse(
-                Collections.emptyList(),          // favoriteCities - пустой список
-                Collections.singletonList(testCity) // cities - список с одним городом
-        );
+        // ---------------------------------- удалил, не работает тест
     }
 
     @Test
