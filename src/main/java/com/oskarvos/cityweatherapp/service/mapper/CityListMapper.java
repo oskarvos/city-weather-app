@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class CityListResponseMapper {
+public class CityListMapper {
 
-    private final CityResponseMapper cityResponseMapper;
+    private final CityMapper cityMapper;
 
-    public CityListResponseMapper(CityResponseMapper cityResponseMapper) {
-        this.cityResponseMapper = cityResponseMapper;
+    public CityListMapper(CityMapper cityMapper) {
+        this.cityMapper = cityMapper;
     }
 
     public CityListResponse buildValidList(List<City> favorite, List<City> cities) {
@@ -25,7 +25,7 @@ public class CityListResponseMapper {
 
     private List<CityResponse> mappingCityList(List<City> cityList) {
         return cityList.stream()
-                .map(cityResponseMapper::buildValid)
+                .map(cityMapper::buildValid)
                 .toList();
     }
 

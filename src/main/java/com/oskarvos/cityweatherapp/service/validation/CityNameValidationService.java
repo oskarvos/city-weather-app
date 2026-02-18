@@ -1,4 +1,4 @@
-package com.oskarvos.cityweatherapp.service;
+package com.oskarvos.cityweatherapp.service.validation;
 
 import com.oskarvos.cityweatherapp.dto.response.ValidationError;
 import com.oskarvos.cityweatherapp.exception.CityValidationException;

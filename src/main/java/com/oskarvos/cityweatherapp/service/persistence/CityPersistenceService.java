@@ -1,4 +1,4 @@
-package com.oskarvos.cityweatherapp.service;
+package com.oskarvos.cityweatherapp.service.persistence;
 
 import com.oskarvos.cityweatherapp.entity.City;
 import com.oskarvos.cityweatherapp.exception.DatabaseException;
@@ -11,17 +11,16 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-public class CityRepositoryServiceImpl implements CityRepositoryService {
+public class CityPersistenceService {
 
-    private static final Logger log = LoggerFactory.getLogger(CityRepositoryServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(CityPersistenceService.class);
 
     private final CityRepository cityRepository;
 
-    public CityRepositoryServiceImpl(CityRepository cityRepository) {
+    public CityPersistenceService(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
     }
 
-    @Override
     public City getCityFromDb(String cityName) {
         log.debug("Начинает поиск города {} в БД", cityName);
         City city = cityRepository.findByCityName(cityName);
@@ -32,7 +31,6 @@ public class CityRepositoryServiceImpl implements CityRepositoryService {
         return city;
     }
 
-    @Override
     @Transactional
     public City saveCityInDb(String cityName, Double temperature) {
         try {
@@ -45,7 +43,6 @@ public class CityRepositoryServiceImpl implements CityRepositoryService {
         }
     }
 
-    @Override
     @Transactional
     public City updateCityDb(City city, Double temperature) {
         try {
@@ -56,6 +53,18 @@ public class CityRepositoryServiceImpl implements CityRepositoryService {
             return updateCity;
         } catch (Exception e) {
             log.error("Ошибка при обновлении данных в БД для города {}: {}", city.getCityName(), e.getMessage());
+            throw new DatabaseException("Не удалось обновить данные погоды для города!", e);
+        }
+    }
+
+    @Transactional
+    public void deleteCityDb(String cityName) {
+        try {
+            City city = cityRepository.findByCityName(cityName);
+            cityRepository.delete(city);
+            log.info("Данные для города {} успешно обновлены", city.getCityName());
+        } catch (Exception e) {
+            log.error("Ошибка при обновлении данных в БД для города {}: {}", cityName, e.getMessage());
             throw new DatabaseException("Не удалось обновить данные погоды для города!", e);
         }
     }

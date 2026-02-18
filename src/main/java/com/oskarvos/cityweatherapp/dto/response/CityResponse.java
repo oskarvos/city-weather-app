@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)  // скрыть поля null в ответе (конструктор)
@@ -16,7 +15,6 @@ public class CityResponse {
     private Double temperature;
     private LocalDateTime updatedAt;
     private String info;
-    private List<ValidationError> validationErrors;
 
     public CityResponse() {
     }
@@ -55,10 +53,6 @@ public class CityResponse {
         return info;
     }
 
-    public List<ValidationError> getValidationErrors() {
-        return validationErrors;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -66,13 +60,13 @@ public class CityResponse {
         return Objects.equals(id, response.id)
                 && Objects.equals(cityName, response.cityName)
                 && Objects.equals(temperature, response.temperature)
-                && Objects.equals(updatedAt, response.updatedAt) &&
-                Objects.equals(info, response.info)
-                && Objects.equals(validationErrors, response.validationErrors);
+                && Objects.equals(updatedAt, response.updatedAt)
+                && Objects.equals(info, response.info);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cityName, temperature, updatedAt, info, validationErrors);
+        return Objects.hash(id, cityName, temperature, updatedAt, info);
     }
+
 }

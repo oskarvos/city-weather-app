@@ -12,16 +12,12 @@ public class WeatherApiResponse {
     @JsonProperty("main")
     private TemperatureInfo temperatureInfo;
 
-    public Double getTemperature() { // парсим JSON, получаем температуру
-        return temperatureInfo != null ? temperatureInfo.getTemperature() : null;
-    }
-
     public String getCityName() {
         return cityName;
     }
 
-    public TemperatureInfo getWeatherMain() {
-        return temperatureInfo;
+    public Double getTemperature() { // парсим JSON, получаем температуру
+        return temperatureInfo != null ? temperatureInfo.getTemperature() : null;
     }
 
 }

@@ -1,9 +1,9 @@
-package com.oskarvos.cityweatherapp.service;
+package com.oskarvos.cityweatherapp.service.city;
 
 import com.oskarvos.cityweatherapp.dto.response.CityListResponse;
 import com.oskarvos.cityweatherapp.entity.City;
 import com.oskarvos.cityweatherapp.repository.CityRepository;
-import com.oskarvos.cityweatherapp.service.mapper.CityListResponseMapper;
+import com.oskarvos.cityweatherapp.service.mapper.CityListMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,25 +12,25 @@ import java.util.List;
 public class CityListingService {
 
     private final CityRepository cityRepository;
-    private final CityListResponseMapper cityListResponseMapper;
+    private final CityListMapper cityListMapper;
 
     public CityListingService(CityRepository cityRepository,
-                              CityListResponseMapper cityListResponseMapper) {
+                              CityListMapper cityListMapper) {
         this.cityRepository = cityRepository;
-        this.cityListResponseMapper = cityListResponseMapper;
+        this.cityListMapper = cityListMapper;
     }
 
     public CityListResponse getAllCities() {
         List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
         List<City> nonFavoriteCities = cityRepository.findNonFavoriteCitiesOrderByCreatedDateDesc();
 
-        return cityListResponseMapper.buildValidList(favoriteCities, nonFavoriteCities);
+        return cityListMapper.buildValidList(favoriteCities, nonFavoriteCities);
     }
 
     public CityListResponse getFavoriteCities() {
         List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();
 
-        return cityListResponseMapper.buildValidList(favoriteCities, List.of());
+        return cityListMapper.buildValidList(favoriteCities, List.of());
     }
 
 }
