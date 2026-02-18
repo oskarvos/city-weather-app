@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -32,31 +32,20 @@ jobs:
       - name: Run unit tests
         run: mvn -B test
 
-      - name: Run specific test class (пример)
-        run: mvn -B test -Dtest=CityControllerSimpleTest
-        continue-on-error: true  # Не останавливает весь процесс
-
-      - name: Package application (без тестов)
+      - name: Package application
         run: mvn -B package -DskipTests
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: city-weather-app.jar
-          path: target/weather-app.jar
+          name: city-weather-app-jar
+          path: target/*.jar
 
       - name: Upload test reports
-        if: always()  # Загружаем отчеты даже при ошибках
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: |
             target/surefire-reports/
             target/failsafe-reports/
-
-      - name: Send notification on failure
-        if: failure()
-        run: |
-          echo "❌ Build failed in branch ${GITHUB_REF#refs/heads/}"
-          echo "Commit: ${{ github.sha }}"
-          echo "See details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
