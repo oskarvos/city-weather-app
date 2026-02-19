@@ -42,7 +42,7 @@ public class FavoriteCity {
         return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
