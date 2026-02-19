@@ -78,7 +78,7 @@ public class CityFavoriteService {
     private FavoriteCity buildFavoriteEntity(City city) {
         FavoriteCity favoriteCity = new FavoriteCity();
         favoriteCity.setCity(city);
-        favoriteCity.setUpdateAt(LocalDateTime.now());
+        favoriteCity.setUpdatedAt(LocalDateTime.now());
         return favoriteCity;
     }
 
