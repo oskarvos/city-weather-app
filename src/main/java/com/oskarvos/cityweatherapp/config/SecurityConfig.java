@@ -24,7 +24,6 @@ public class SecurityConfig {
         http
                 // Отключаем CSRF (для REST API с Basic Auth это обычно нужно)
                 .csrf(csrf -> csrf.disable())
-
                 // Настраиваем правила доступа
                 .authorizeHttpRequests(authz -> authz
                         // Все запросы к /api/cities требуют аутентификации
@@ -34,7 +33,6 @@ public class SecurityConfig {
                         // Все остальные запросы тоже требуют аутентификации
                         .anyRequest().authenticated()
                 )
-
                 // Включаем HTTP Basic аутентификацию
                 .httpBasic(withDefaults());
 
@@ -56,7 +54,6 @@ public class SecurityConfig {
                 .password(passwordEncoder().encode("123"))
                 .roles("ADMIN")
                 .build();
-
         return new InMemoryUserDetailsManager(user, admin);
     }
 

@@ -11,7 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class WeatherApiClient { // идет на сервер openweathermap.org и возвращает JSON
+public class WeatherApiClient {
 
     private static final Logger log = LoggerFactory.getLogger(WeatherApiClient.class);
 
@@ -34,9 +34,9 @@ public class WeatherApiClient { // идет на сервер openweathermap.org
                     weatherConfig.getUnits());
 
             return restTemplate.getForObject(url, WeatherApiResponse.class);
-        } catch (HttpClientErrorException.NotFound e) {  // Город не найден в API
+        } catch (HttpClientErrorException.NotFound e) {
             throw new WeatherApiCityNotFoundException("Город не найден в API", e);
-        } catch (Exception e) { // Другие ошибки (таймаут, проблемы с сетью и т.д.)
+        } catch (Exception e) {
             throw new WeatherApiConnectionException("Ошибка при запросе к API погоды (таймаут, проблемы с сетью и т.д.)", e);
         }
     }

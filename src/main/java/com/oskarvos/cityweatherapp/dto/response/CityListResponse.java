@@ -1,34 +1,36 @@
 package com.oskarvos.cityweatherapp.dto.response;
 
-import com.oskarvos.cityweatherapp.entity.City;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CityListResponse {
 
-    private List<City> favoriteCities;
-    private List<City> cities;
+    private final List<CityResponse> favorite;
+    private final List<CityResponse> noFavorite;
 
-    public CityListResponse(List<City> favoriteCities, List<City> cities) {
-        this.favoriteCities = favoriteCities != null ? favoriteCities : new ArrayList<>();
-        this.cities = cities != null ? cities : new ArrayList<>();
+    public CityListResponse(List<CityResponse> favorite, List<CityResponse> noFavorite) {
+        this.favorite = favorite;
+        this.noFavorite = noFavorite;
     }
 
-    public List<City> getFavoriteCities() {
-        return favoriteCities;
+    public List<CityResponse> getFavorite() {
+        return favorite;
     }
 
-    public void setFavoriteCities(List<City> favoriteCities) {
-        this.favoriteCities = favoriteCities;
+    public List<CityResponse> getNoFavorite() {
+        return noFavorite;
     }
 
-    public List<City> getCities() {
-        return cities;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CityListResponse that = (CityListResponse) o;
+        return Objects.equals(favorite, that.favorite)
+                && Objects.equals(noFavorite, that.noFavorite);
     }
 
-    public void setCities(List<City> cities) {
-        this.cities = cities;
+    @Override
+    public int hashCode() {
+        return Objects.hash(favorite, noFavorite);
     }
-
 }

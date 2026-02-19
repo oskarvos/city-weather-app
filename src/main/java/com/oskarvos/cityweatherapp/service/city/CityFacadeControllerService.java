@@ -1,4 +1,4 @@
-package com.oskarvos.cityweatherapp.service;
+package com.oskarvos.cityweatherapp.service.city;
 
 import com.oskarvos.cityweatherapp.dto.response.CityListResponse;
 import com.oskarvos.cityweatherapp.dto.response.CityResponse;
@@ -17,20 +17,23 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class CityFacadeService {
+public class CityFacadeControllerService {
 
-    private static final Logger log = LoggerFactory.getLogger(CityFacadeService.class);
+    private static final Logger log = LoggerFactory.getLogger(CityFacadeControllerService.class);
 
     private final CityQueryService cityQueryService;
     private final CityDeleteService cityDeleteService;
     private final CityListingService cityListingService;
+    private final CityFavoriteService cityFavoriteService;
 
-    public CityFacadeService(CityQueryService cityQueryService,
-                             CityDeleteService cityDeleteService,
-                             CityListingService cityListingService) {
+    public CityFacadeControllerService(CityQueryService cityQueryService,
+                                       CityDeleteService cityDeleteService,
+                                       CityListingService cityListingService,
+                                       CityFavoriteService cityFavoriteService) {
         this.cityQueryService = cityQueryService;
         this.cityDeleteService = cityDeleteService;
         this.cityListingService = cityListingService;
+        this.cityFavoriteService = cityFavoriteService;
     }
 
     public ResponseEntity<?> getCityName(String cityName) {
@@ -82,6 +85,29 @@ public class CityFacadeService {
             return ResponseEntity.ok(response);
         } catch (CityNotFoundException e) {
             log.warn("Город {} не найден в БД", cityName);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", e.getMessage()));
+        } catch (CityValidationException e) {
+            log.warn("Ошибка валидации для город {}: {} ошибок", cityName, e.getErrors().size());
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of(
+                            "error", "Ошибки валидации",
+                            "details", e.getErrors()
+                    ));
+        }
+    }
+
+    public ResponseEntity<?> createFavoriteCity(String cityName) {
+        log.info("Получен запрос на добавление города {} в избранные", cityName);
+
+        try {
+            CityResponse response = cityFavoriteService.createFavoriteCity(cityName);
+            log.info("Получен ответ добавлен город {} в избранные либо уже существует как избранный", cityName);
+            return ResponseEntity.ok(response);
+        } catch (WeatherApiCityNotFoundException e) {
+            log.error("Город {} не найден в API погоды", cityName);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", e.getMessage()));

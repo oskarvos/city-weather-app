@@ -1,35 +1,35 @@
-package com.oskarvos.cityweatherapp.service;
+package com.oskarvos.cityweatherapp.service.weather;
 
 import com.oskarvos.cityweatherapp.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.entity.City;
 import com.oskarvos.cityweatherapp.exception.DatabaseException;
 import com.oskarvos.cityweatherapp.exception.WeatherApiConnectionException;
+import com.oskarvos.cityweatherapp.service.persistence.CityPersistenceService;
 import com.oskarvos.cityweatherapp.validation.date.OutdatedChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WeatherServiceImpl implements WeatherService {
+public class WeatherService {
 
-    private static final Logger log = LoggerFactory.getLogger(WeatherServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(WeatherService.class);
 
     private final OutdatedChecker outdatedChecker;
-    private final CityRepositoryService cityRepositoryService;
-    private final WeatherApiService weatherApiService;
+    private final CityPersistenceService cityPersistenceService;
+    private final WeatherClientService weatherClientService;
 
-    public WeatherServiceImpl(OutdatedChecker outdatedChecker,
-                              CityRepositoryService cityRepositoryService,
-                              WeatherApiService weatherApiService) {
+    public WeatherService(OutdatedChecker outdatedChecker,
+                          CityPersistenceService cityPersistenceService,
+                          WeatherClientService weatherClientService) {
         this.outdatedChecker = outdatedChecker;
-        this.cityRepositoryService = cityRepositoryService;
-        this.weatherApiService = weatherApiService;
+        this.cityPersistenceService = cityPersistenceService;
+        this.weatherClientService = weatherClientService;
     }
 
-    @Override
     public City getActualWeather(String cityName) {
         log.info("Получение погоды для города: {}", cityName);
-        City dbCity = cityRepositoryService.getCityFromDb(cityName);
+        City dbCity = cityPersistenceService.getCityFromDb(cityName);
 
         if (dbCity == null) {
             log.debug("Город {} не найден в БД", cityName);
@@ -46,19 +46,18 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     private City saveNewCity(String cityName) {
-
-        WeatherApiResponse weatherApiResponse = weatherApiService.sendRequestWeatherApiClient(cityName);
+        WeatherApiResponse weatherApiResponse = weatherClientService.sendRequestWeatherApiClient(cityName);
         if (weatherApiResponse != null) {
-            return cityRepositoryService.saveCityInDb(cityName, weatherApiResponse.getTemperature());
+            return cityPersistenceService.saveCityInDb(cityName, weatherApiResponse.getTemperature());
         }
         return null;
     }
 
     private City updateCityInDb(City dbCity, String cityName) {
         try {
-            WeatherApiResponse weatherApiResponse = weatherApiService.sendRequestWeatherApiClient(cityName);
+            WeatherApiResponse weatherApiResponse = weatherClientService.sendRequestWeatherApiClient(cityName);
             if (weatherApiResponse != null) {
-                return cityRepositoryService.updateCityDb(dbCity, weatherApiResponse.getTemperature());
+                return cityPersistenceService.updateCityDb(dbCity, weatherApiResponse.getTemperature());
             }
             return dbCity;
         } catch (WeatherApiConnectionException e) {

@@ -1,4 +1,4 @@
-package com.oskarvos.cityweatherapp.service;
+package com.oskarvos.cityweatherapp.service.weather;
 
 import com.oskarvos.cityweatherapp.client.WeatherApiClient;
 import com.oskarvos.cityweatherapp.dto.external.WeatherApiResponse;
@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WeatherApiService {
+public class WeatherClientService {
 
-    private static final Logger log = LoggerFactory.getLogger(WeatherApiService.class);
+    private static final Logger log = LoggerFactory.getLogger(WeatherClientService.class);
 
     private final WeatherApiClient weatherApiClient;
 
-    public WeatherApiService(WeatherApiClient weatherApiClient) {
+    public WeatherClientService(WeatherApiClient weatherApiClient) {
         this.weatherApiClient = weatherApiClient;
     }
 

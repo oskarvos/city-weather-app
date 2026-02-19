@@ -19,7 +19,7 @@ public class FavoriteCity {
     )
     private City city;
 
-    @Column(name = "updated_At")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     public Long getId() {
