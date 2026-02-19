@@ -7,12 +7,7 @@ pipeline {
     }
 
     environment {
-        // IP хоста изнутри контейнера Jenkins (стандартный для Docker)
         HOST_IP = '172.17.0.1'
-        // Параметры подключения к БД
-        DB_URL = "jdbc:postgresql://${HOST_IP}:5432/weather_db"
-        DB_USER = 'postgres'
-        DB_PASS = '2223399z'
     }
 
     stages {
@@ -32,9 +27,9 @@ pipeline {
             steps {
                 sh """
                     mvn test \
-                      -Dspring.datasource.url=${DB_URL} \
-                      -Dspring.datasource.username=${DB_USER} \
-                      -Dspring.datasource.password=${DB_PASS}
+                      -Dspring.datasource.url=jdbc:postgresql://${HOST_IP}:5432/weather_db \
+                      -Dspring.datasource.username=postgres \
+                      -Dspring.datasource.password=2223399z
                 """
             }
             post {
