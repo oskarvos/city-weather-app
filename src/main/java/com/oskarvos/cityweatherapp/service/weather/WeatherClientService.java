@@ -20,7 +20,7 @@ public class WeatherClientService {
     public WeatherApiResponse sendRequestWeatherApiClient(String cityName) {
         log.debug("Запрос к API погоды для нового города: {}", cityName);
         WeatherApiResponse response = weatherApiClient.getWeatherByCityName(cityName);
-        log.debug("Получен ответ от API погоды для города: {}, температура {}", cityName, response.getTemperature());
+        log.debug("Получен ответ от API погоды для города: {}", cityName);
         return response;
     }
 

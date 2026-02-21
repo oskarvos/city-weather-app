@@ -1,5 +1,6 @@
 package com.oskarvos.cityweatherapp.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -13,7 +14,10 @@ public class CityResponse {
     private Long id;
     private String cityName;
     private Double temperature;
+
+    @JsonFormat(pattern = "HH:mm часов dd.MM.yyyy")
     private LocalDateTime updatedAt;
+
     private String info;
 
     public CityResponse() {
