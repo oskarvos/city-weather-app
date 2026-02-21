@@ -37,13 +37,13 @@ class CityQueryServiceTest {
     private City city;
     private CityResponse cityResponse;
     private CityResponse cityResponseInfo;
-    private final Long ID = 1L;
-    private final String CITY_NAME = "Minsk";
-    private final Double TEMPERATURE = 22.3;
-    private final LocalDateTime UPDATE_AT = LocalDateTime.of(
+    private static final Long ID = 1L;
+    private static final String CITY_NAME = "Minsk";
+    private static final Double TEMPERATURE = 22.3;
+    private static final LocalDateTime UPDATE_AT = LocalDateTime.of(
             2026, 2, 19, 20, 30, 45, 123456789);
-    private final String INFO = "устаревшие данные";
-    private final String NORMALIZE = "Minsk";
+    private static final String INFO = "устаревшие данные";
+    private static final String NORMALIZE = "Minsk";
 
     @BeforeEach
     void setUp() {

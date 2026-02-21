@@ -19,8 +19,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CityPersistenceServiceTest {
 
-//    should[ОжидаемоеПоведение]When[Сценарий]
-
     @Mock
     CityRepository cityRepository;
 
@@ -28,10 +26,10 @@ class CityPersistenceServiceTest {
     CityPersistenceService cityPersistenceService;
 
     private City city;
-    private final Long ID = 1L;
-    private final String CITY_NAME = "Minsk";
-    private final Double TEMPERATURE = 22.3;
-    private final LocalDateTime UPDATE_AT = LocalDateTime.of(
+    private static final Long ID = 1L;
+    private static final String CITY_NAME = "Minsk";
+    private static final Double TEMPERATURE = 22.3;
+    private static final LocalDateTime UPDATE_AT = LocalDateTime.of(
             2026, 2, 19, 20, 30, 45, 123456789);
 
     @BeforeEach
@@ -47,6 +45,7 @@ class CityPersistenceServiceTest {
     @DisplayName("Должен вернуть null, если город не найден в БД")
     void shouldReturnNullWhenCityNotFound() {
         when(cityPersistenceService.getCityFromDb(city.getCityName())).thenReturn(null);
+
         City result = cityPersistenceService.getCityFromDb(city.getCityName());
 
         assertNull(result, "Для несуществующего города должен вернуться Null");
@@ -59,6 +58,7 @@ class CityPersistenceServiceTest {
     @DisplayName("Должен вернуть город с данными, если он найден в БД")
     void shouldReturnCityWhenFound() {
         when(cityPersistenceService.getCityFromDb(city.getCityName())).thenReturn(city);
+
         City result = cityPersistenceService.getCityFromDb(city.getCityName());
 
         assertAll("Проверка возвращаемого города",
@@ -75,8 +75,8 @@ class CityPersistenceServiceTest {
     @Test
     @DisplayName("Должен обрабатывать случай, когда репозиторий возвращает null")
     void shouldReturnNullFromRepository() {
-
         when(cityPersistenceService.getCityFromDb(CITY_NAME)).thenReturn(null);
+
         City result = cityPersistenceService.getCityFromDb(CITY_NAME);
 
         assertNull(result);
@@ -104,6 +104,7 @@ class CityPersistenceServiceTest {
     @DisplayName("Должен вернуть null, если город не сохранился в БД")
     void shouldResultNullWhenRepositorySaveReturnsNull() {
         when(cityRepository.save(any(City.class))).thenReturn(null);
+
         City result = cityPersistenceService.saveCityInDb(CITY_NAME, TEMPERATURE);
 
         assertNull(result);
@@ -115,11 +116,9 @@ class CityPersistenceServiceTest {
     @Test
     @DisplayName("Должен вернуть город с данными, если сохранил город в БД")
     void shouldReturnCityWhenSavedCityInDb() {
-
         when(cityRepository.save(any(City.class))).thenReturn(city);
 
         City result = cityPersistenceService.saveCityInDb(CITY_NAME, TEMPERATURE);
-
 
         assertAll("Должен вернуть данные города сохранившего в БД",
                 () -> assertNotNull(result),

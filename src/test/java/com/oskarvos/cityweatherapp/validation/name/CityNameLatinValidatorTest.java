@@ -3,19 +3,15 @@ package com.oskarvos.cityweatherapp.validation.name;
 import com.oskarvos.cityweatherapp.dto.response.ValidationError;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 @DisplayName("Тесты для CityNameLatinValidator")
 class CityNameLatinValidatorTest {
 
-    @Autowired
-    private CityNameLatinValidator validator;
+    private final CityNameLatinValidator validator = new CityNameLatinValidator();
 
     @Test
     @DisplayName("Валидное название города - ошибки нет")
