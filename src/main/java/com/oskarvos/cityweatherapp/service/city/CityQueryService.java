@@ -2,6 +2,7 @@ package com.oskarvos.cityweatherapp.service.city;
 
 import com.oskarvos.cityweatherapp.dto.response.CityResponse;
 import com.oskarvos.cityweatherapp.entity.City;
+import com.oskarvos.cityweatherapp.service.kafka.WeatherRequestProducer;
 import com.oskarvos.cityweatherapp.service.mapper.CityMapper;
 import com.oskarvos.cityweatherapp.service.validation.CityNameValidationService;
 import com.oskarvos.cityweatherapp.service.weather.WeatherService;
@@ -15,20 +16,26 @@ public class CityQueryService {
     private final OutdatedChecker outdatedChecker;
     private final CityMapper cityMapper;
     private final CityNameValidationService cityNameValidationService;
+    private final WeatherRequestProducer weatherRequestProducer;
 
     public CityQueryService(WeatherService weatherService,
                             OutdatedChecker outdatedChecker,
                             CityMapper cityMapper,
-                            CityNameValidationService cityNameValidationService) {
+                            CityNameValidationService cityNameValidationService,
+                            WeatherRequestProducer weatherRequestProducer) {
         this.weatherService = weatherService;
         this.outdatedChecker = outdatedChecker;
         this.cityMapper = cityMapper;
         this.cityNameValidationService = cityNameValidationService;
+        this.weatherRequestProducer = weatherRequestProducer;
     }
 
     public CityResponse getCityByName(String cityName) {
         String normalizeCityName = normalizeCityName(cityName);
-        City city = getActualWeather(normalizeCityName); // получаем город от сервера погоды
+        City city = getActualWeather(normalizeCityName);
+
+        weatherRequestProducer.sendWeatherRequest(city.getCityName(), city.getTemperature());
+
         return outdateChecker(city);
     }
 
