@@ -2,6 +2,7 @@ package com.oskarvos.weatherconsumer.consumer;
 
 import com.oskarvos.weatherconsumer.entity.WeatherRequestLog;
 import com.oskarvos.weatherconsumer.repository.WeatherRequestLogRepository;
+import com.oskarvos.weatherconsumer.service.CityRequestStatsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,9 +17,12 @@ public class WeatherLogConsumer {
     private static final Logger log = LoggerFactory.getLogger(WeatherLogConsumer.class);
 
     private final WeatherRequestLogRepository repository;
+    private final CityRequestStatsService cityRequestStatsService;
 
-    public WeatherLogConsumer(WeatherRequestLogRepository repository) {
+    public WeatherLogConsumer(WeatherRequestLogRepository repository,
+                              CityRequestStatsService cityRequestStatsService) {
         this.repository = repository;
+        this.cityRequestStatsService = cityRequestStatsService;
     }
 
     @KafkaListener(topics = "weather-request", groupId = "weather-consumer-group")
@@ -36,6 +40,8 @@ public class WeatherLogConsumer {
         log.debug("Topic: начинает сохранение запроса в БД");
         repository.save(requestLog);
         log.debug("Topic: запрос сохранен в БД");
+
+        cityRequestStatsService.createCityRequestStats(requestLog);
     }
 
 }
