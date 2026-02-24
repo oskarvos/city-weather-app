@@ -1,0 +1,16 @@
+services:
+  weather-consumer:
+    build: ./weather-consumer
+    container_name: weather-consumer
+    network_mode: "host"
+    environment:
+      SERVER_PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/weather_logs_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: "2223399z"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+
+networks:
+  weather-network:
+    driver: bridge

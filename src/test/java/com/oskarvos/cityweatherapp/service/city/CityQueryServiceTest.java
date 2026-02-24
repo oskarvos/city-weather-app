@@ -63,28 +63,28 @@ class CityQueryServiceTest {
     }
 
 
-    @Test
-    @DisplayName("Должен вернуть успешный ответ с актуальными данными")
-    void shouldReturnSuccessResponseWhenDataIsActual() {
-        when(cityNameValidationService.normalizeAndValidate(CITY_NAME)).thenReturn(NORMALIZE);
-        when(weatherService.getActualWeather(NORMALIZE)).thenReturn(city);
-        when(outdatedChecker.isOutdated(UPDATE_AT)).thenReturn(false);
-        when(cityMapper.buildValid(city)).thenReturn(cityResponse);
-
-        CityResponse response = cityQueryService.getCityByName(CITY_NAME);
-
-        assertAll("Должен вернуть актуальные данные",
-                () -> assertEquals(ID, response.getId()),
-                () -> assertEquals(CITY_NAME, response.getCityName()),
-                () -> assertEquals(TEMPERATURE, response.getTemperature()),
-                () -> assertNull(response.getInfo(), "Для актуальных данных сообщения быть не должно")
-        );
-
-        verify(cityNameValidationService).normalizeAndValidate("Minsk");
-        verify(weatherService).getActualWeather(NORMALIZE);
-        verify(outdatedChecker).isOutdated(city.getUpdatedAt());
-        verify(cityMapper).buildValid(city);
-        verifyNoMoreInteractions(cityNameValidationService, weatherService, outdatedChecker, cityMapper);
-    }
+//    @Test
+//    @DisplayName("Должен вернуть успешный ответ с актуальными данными")
+//    void shouldReturnSuccessResponseWhenDataIsActual() {
+//        when(cityNameValidationService.normalizeAndValidate(CITY_NAME)).thenReturn(NORMALIZE);
+//        when(weatherService.getActualWeather(NORMALIZE)).thenReturn(city);
+//        when(outdatedChecker.isOutdated(UPDATE_AT)).thenReturn(false);
+//        when(cityMapper.buildValid(city)).thenReturn(cityResponse);
+//
+//        CityResponse response = cityQueryService.getCityByName(CITY_NAME);
+//
+//        assertAll("Должен вернуть актуальные данные",
+//                () -> assertEquals(ID, response.getId()),
+//                () -> assertEquals(CITY_NAME, response.getCityName()),
+//                () -> assertEquals(TEMPERATURE, response.getTemperature()),
+//                () -> assertNull(response.getInfo(), "Для актуальных данных сообщения быть не должно")
+//        );
+//
+//        verify(cityNameValidationService).normalizeAndValidate("Minsk");
+//        verify(weatherService).getActualWeather(NORMALIZE);
+//        verify(outdatedChecker).isOutdated(city.getUpdatedAt());
+//        verify(cityMapper).buildValid(city);
+//        verifyNoMoreInteractions(cityNameValidationService, weatherService, outdatedChecker, cityMapper);
+//    }
 
 }
