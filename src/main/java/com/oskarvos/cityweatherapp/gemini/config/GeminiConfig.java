@@ -19,8 +19,8 @@ public class GeminiConfig {
         this.apiKey = apiKey;
         this.apiUrl = apiUrl;
         this.thinkingBudget = 0;
-        this.maxOutputTokens = 15;
-        this.temperature = 0.2;
+        this.maxOutputTokens = 50;
+        this.temperature = 0.5;
     }
 
     public String getApiKey() {
