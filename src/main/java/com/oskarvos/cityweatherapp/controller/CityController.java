@@ -1,5 +1,6 @@
 package com.oskarvos.cityweatherapp.controller;
 
+import com.oskarvos.cityweatherapp.dto.request.CityRequest;
 import com.oskarvos.cityweatherapp.dto.response.CityListResponse;
 import com.oskarvos.cityweatherapp.service.city.CityFacadeControllerService;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,9 @@ public class CityController {
         this.cityFacadeControllerService = cityFacadeControllerService;
     }
 
-    @GetMapping("/cities/name/{cityName}")
-    public ResponseEntity<?> getCityName(@PathVariable String cityName) {
-        return cityFacadeControllerService.getCityName(cityName);
+    @PostMapping("/cities/name")
+    public ResponseEntity<?> getCityName(@RequestBody CityRequest request) {
+        return cityFacadeControllerService.getCityName(request.getCityName());
     }
 
     @GetMapping("/cities")
@@ -27,14 +28,14 @@ public class CityController {
         return cityFacadeControllerService.getCities(userDetails);
     }
 
-    @DeleteMapping("/cities/delete/{cityName}")
-    public ResponseEntity<?> deleteCity(@PathVariable String cityName) {
-        return cityFacadeControllerService.deleteCity(cityName);
+    @DeleteMapping("/cities/delete")
+    public ResponseEntity<?> deleteCity(@RequestBody CityRequest request) {
+        return cityFacadeControllerService.deleteCity(request.getCityName());
     }
 
-    @GetMapping("/cities/favorite/name/{cityName}")
-    public ResponseEntity<?> createFavoriteCity(@PathVariable String cityName) {
-        return cityFacadeControllerService.createFavoriteCity(cityName);
+    @PostMapping("/cities/favorite/name")
+    public ResponseEntity<?> createFavoriteCity(@RequestBody CityRequest request) {
+        return cityFacadeControllerService.createFavoriteCity(request.getCityName());
     }
 
 }
