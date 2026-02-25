@@ -1,7 +1,7 @@
 package com.oskarvos.cityweatherapp.integration;
 
-import com.oskarvos.cityweatherapp.entity.City;
-import com.oskarvos.cityweatherapp.service.persistence.CityPersistenceService;
+import com.oskarvos.cityweatherapp.city.entity.City;
+import com.oskarvos.cityweatherapp.city.service.persistence.CityPersistenceService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

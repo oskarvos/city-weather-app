@@ -1,8 +1,9 @@
 package com.oskarvos.cityweatherapp.service.persistence;
 
-import com.oskarvos.cityweatherapp.entity.City;
-import com.oskarvos.cityweatherapp.exception.DatabaseException;
-import com.oskarvos.cityweatherapp.repository.CityRepository;
+import com.oskarvos.cityweatherapp.city.entity.City;
+import com.oskarvos.cityweatherapp.common.exception.DatabaseException;
+import com.oskarvos.cityweatherapp.city.repository.CityRepository;
+import com.oskarvos.cityweatherapp.city.service.persistence.CityPersistenceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

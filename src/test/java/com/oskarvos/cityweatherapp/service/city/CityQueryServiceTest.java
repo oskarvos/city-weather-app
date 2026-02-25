@@ -1,23 +1,19 @@
 package com.oskarvos.cityweatherapp.service.city;
 
-import com.oskarvos.cityweatherapp.dto.response.CityResponse;
-import com.oskarvos.cityweatherapp.entity.City;
-import com.oskarvos.cityweatherapp.service.mapper.CityMapper;
-import com.oskarvos.cityweatherapp.service.validation.CityNameValidationService;
-import com.oskarvos.cityweatherapp.service.weather.WeatherService;
-import com.oskarvos.cityweatherapp.validation.date.OutdatedChecker;
+import com.oskarvos.cityweatherapp.city.dto.response.CityResponse;
+import com.oskarvos.cityweatherapp.city.entity.City;
+import com.oskarvos.cityweatherapp.city.service.CityQueryService;
+import com.oskarvos.cityweatherapp.city.service.mapper.CityMapper;
+import com.oskarvos.cityweatherapp.city.service.validation.CityNameValidationService;
+import com.oskarvos.cityweatherapp.weather.service.WeatherService;
+import com.oskarvos.cityweatherapp.common.validation.date.OutdatedChecker;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CityQueryServiceTest {

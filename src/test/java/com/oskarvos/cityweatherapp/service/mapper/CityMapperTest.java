@@ -1,7 +1,8 @@
 package com.oskarvos.cityweatherapp.service.mapper;
 
-import com.oskarvos.cityweatherapp.dto.response.CityResponse;
-import com.oskarvos.cityweatherapp.entity.City;
+import com.oskarvos.cityweatherapp.city.dto.response.CityResponse;
+import com.oskarvos.cityweatherapp.city.entity.City;
+import com.oskarvos.cityweatherapp.city.service.mapper.CityMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,7 @@
 package com.oskarvos.cityweatherapp.validation.name;
 
-import com.oskarvos.cityweatherapp.dto.response.ValidationError;
+import com.oskarvos.cityweatherapp.city.dto.response.ValidationError;
+import com.oskarvos.cityweatherapp.common.validation.name.CityNameLatinValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

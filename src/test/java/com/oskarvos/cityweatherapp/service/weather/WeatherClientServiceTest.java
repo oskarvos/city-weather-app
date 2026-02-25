@@ -1,7 +1,8 @@
 package com.oskarvos.cityweatherapp.service.weather;
 
-import com.oskarvos.cityweatherapp.client.WeatherApiClient;
-import com.oskarvos.cityweatherapp.dto.external.WeatherApiResponse;
+import com.oskarvos.cityweatherapp.weather.client.WeatherApiClient;
+import com.oskarvos.cityweatherapp.weather.dto.external.WeatherApiResponse;
+import com.oskarvos.cityweatherapp.weather.service.WeatherClientService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
