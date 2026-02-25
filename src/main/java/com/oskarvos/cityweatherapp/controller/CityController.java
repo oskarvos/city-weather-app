@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/cities")
 public class CityController {
 
     private final CityFacadeControllerService cityFacadeControllerService;
@@ -18,22 +18,22 @@ public class CityController {
         this.cityFacadeControllerService = cityFacadeControllerService;
     }
 
-    @PostMapping("/cities/name")
+    @PostMapping("/name")
     public ResponseEntity<?> getCityName(@RequestBody CityRequest request) {
         return cityFacadeControllerService.getCityName(request.getCityName());
     }
 
-    @GetMapping("/cities")
+    @GetMapping("/")
     public ResponseEntity<CityListResponse> getCities(@AuthenticationPrincipal UserDetails userDetails) {
         return cityFacadeControllerService.getCities(userDetails);
     }
 
-    @DeleteMapping("/cities/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteCity(@RequestBody CityRequest request) {
         return cityFacadeControllerService.deleteCity(request.getCityName());
     }
 
-    @PostMapping("/cities/favorite/name")
+    @PostMapping("/favorite/name")
     public ResponseEntity<?> createFavoriteCity(@RequestBody CityRequest request) {
         return cityFacadeControllerService.createFavoriteCity(request.getCityName());
     }
