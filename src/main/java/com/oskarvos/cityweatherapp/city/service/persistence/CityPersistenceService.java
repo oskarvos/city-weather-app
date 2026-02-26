@@ -62,10 +62,10 @@ public class CityPersistenceService {
         try {
             City city = cityRepository.findByCityName(cityName);
             cityRepository.delete(city);
-            log.info("Данные для города {} успешно обновлены", city.getCityName());
+            log.info("Город {} успешно удален", city.getCityName());
         } catch (Exception e) {
-            log.error("Ошибка при обновлении данных в БД для города {}: {}", cityName, e.getMessage());
-            throw new DatabaseException("Не удалось обновить данные погоды для города!", e);
+            log.error("Ошибка при удалении города в БД {}: {}", cityName, e.getMessage());
+            throw new DatabaseException("Не удалось удалить город!", e);
         }
     }
 

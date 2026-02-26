@@ -12,6 +12,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -71,10 +72,16 @@ public class AuditAspect {
             return "{}";
         }
 
+
         Map<String, Object> paramsMap = new HashMap<>();
 
         for (int i = 0; i < parameterName.length; i++) {
             Object value = parameterValue[i];
+
+            if (value instanceof UserDetails) {
+                paramsMap.put(parameterName[i], "omitted");
+                continue;
+            }
 
             paramsMap.put(parameterName[i], value != null ? value.toString() : null);
         }

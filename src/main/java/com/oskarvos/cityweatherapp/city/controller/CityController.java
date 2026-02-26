@@ -20,22 +20,25 @@ public class CityController {
     }
 
     @PostMapping("/name")
-    @Auditable(action = "VIEW_WEATHER")
+    @Auditable(action = "VIEW_CITY")
     public ResponseEntity<?> getCityName(@RequestBody CityRequest request) {
         return cityFacadeControllerService.getCityName(request.getCityName());
     }
 
-    @GetMapping("/")
+    @GetMapping
+    @Auditable(action = "VIEW_CITIES_LIST")
     public ResponseEntity<CityListResponse> getCities(@AuthenticationPrincipal UserDetails userDetails) {
         return cityFacadeControllerService.getCities(userDetails);
     }
 
     @DeleteMapping("/delete")
+    @Auditable(action = "DELETE_CITY")
     public ResponseEntity<?> deleteCity(@RequestBody CityRequest request) {
         return cityFacadeControllerService.deleteCity(request.getCityName());
     }
 
     @PostMapping("/favorite/name")
+    @Auditable(action = "VIEW_FAVORITE_CITY")
     public ResponseEntity<?> createFavoriteCity(@RequestBody CityRequest request) {
         return cityFacadeControllerService.createFavoriteCity(request.getCityName());
     }
