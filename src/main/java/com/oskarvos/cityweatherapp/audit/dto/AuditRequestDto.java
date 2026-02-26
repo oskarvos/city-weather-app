@@ -18,7 +18,14 @@ public class AuditRequestDto {
     @JsonFormat(pattern = "dd.MM.yyyy - HH:mm")
     private LocalDateTime timestamp;
 
-    public AuditRequestDto(String lastName, String firstName, String role, String login, String actionName, String parameters, boolean success, LocalDateTime timestamp) {
+    public AuditRequestDto(String lastName,
+                           String firstName,
+                           String role,
+                           String login,
+                           String actionName,
+                           String parameters,
+                           boolean success,
+                           LocalDateTime timestamp) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.role = role;

@@ -12,4 +12,9 @@ public class CityRequest {
         this.cityName = cityName;
     }
 
+    @Override
+    public String toString() {
+        return String.format("{cityName: %s", cityName);
+    }
+
 }

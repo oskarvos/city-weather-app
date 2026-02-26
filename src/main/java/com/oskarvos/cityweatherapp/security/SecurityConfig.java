@@ -3,9 +3,10 @@ package com.oskarvos.cityweatherapp.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,6 +15,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -26,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 // Отключаем CSRF (для REST API с Basic Auth это обычно нужно)
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 // Настраиваем правила доступа
                 .authorizeHttpRequests(authz -> authz
                         // Все запросы к /api/cities требуют аутентификации
@@ -39,7 +41,7 @@ public class SecurityConfig {
                 )
                 // Включаем HTTP Basic аутентификацию
                 .httpBasic(withDefaults())
-                .userDetailsService((UserDetailsService) customUserDetailsService);
+                .userDetailsService(customUserDetailsService);
 
         return http.build();
     }

@@ -33,6 +33,18 @@ public class User {
         return id;
     }
 
+    public User() {
+    }
+
+    public User(String lastName, String firstName, String email, String role, String login, String password) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.email = email;
+        this.role = role;
+        this.login = login;
+        this.password = password;
+    }
+
     public String getLastName() {
         return lastName;
     }

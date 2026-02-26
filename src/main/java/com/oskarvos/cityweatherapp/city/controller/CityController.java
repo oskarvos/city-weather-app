@@ -1,5 +1,6 @@
 package com.oskarvos.cityweatherapp.city.controller;
 
+import com.oskarvos.cityweatherapp.audit.annotation.Auditable;
 import com.oskarvos.cityweatherapp.city.dto.request.CityRequest;
 import com.oskarvos.cityweatherapp.city.dto.response.CityListResponse;
 import com.oskarvos.cityweatherapp.city.service.CityFacadeControllerService;
@@ -19,6 +20,7 @@ public class CityController {
     }
 
     @PostMapping("/name")
+    @Auditable(action = "VIEW_WEATHER")
     public ResponseEntity<?> getCityName(@RequestBody CityRequest request) {
         return cityFacadeControllerService.getCityName(request.getCityName());
     }
