@@ -3,18 +3,16 @@ package com.oskarvos.cityweatherapp.city.service.mapper;
 import com.oskarvos.cityweatherapp.city.dto.response.CityListResponse;
 import com.oskarvos.cityweatherapp.city.dto.response.CityResponse;
 import com.oskarvos.cityweatherapp.city.entity.City;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Component
 public class CityListMapper {
 
     private final CityMapper cityMapper;
-
-    public CityListMapper(CityMapper cityMapper) {
-        this.cityMapper = cityMapper;
-    }
 
     public CityListResponse buildValidList(List<City> favorite, List<City> cities) {
         List<CityResponse> favoriteDto = mappingCityList(favorite);

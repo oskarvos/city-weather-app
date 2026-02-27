@@ -4,20 +4,18 @@ import com.oskarvos.cityweatherapp.audit.annotation.Auditable;
 import com.oskarvos.cityweatherapp.city.dto.request.CityRequest;
 import com.oskarvos.cityweatherapp.city.dto.response.CityListResponse;
 import com.oskarvos.cityweatherapp.city.service.CityFacadeControllerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/cities")
 public class CityController {
 
     private final CityFacadeControllerService cityFacadeControllerService;
-
-    public CityController(CityFacadeControllerService cityFacadeControllerService) {
-        this.cityFacadeControllerService = cityFacadeControllerService;
-    }
 
     @PostMapping("/name")
     @Auditable(action = "VIEW_CITY")

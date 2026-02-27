@@ -1,6 +1,5 @@
 package com.oskarvos.cityweatherapp.city.service;
 
-import com.oskarvos.cityweatherapp.weather.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.city.dto.response.CityResponse;
 import com.oskarvos.cityweatherapp.city.entity.City;
 import com.oskarvos.cityweatherapp.city.entity.FavoriteCity;
@@ -8,11 +7,14 @@ import com.oskarvos.cityweatherapp.city.repository.FavoriteCityRepository;
 import com.oskarvos.cityweatherapp.city.service.mapper.CityMapper;
 import com.oskarvos.cityweatherapp.city.service.persistence.CityPersistenceService;
 import com.oskarvos.cityweatherapp.city.service.validation.CityNameValidationService;
+import com.oskarvos.cityweatherapp.weather.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.weather.service.WeatherClientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@RequiredArgsConstructor
 @Service
 public class CityFavoriteService {
 
@@ -21,18 +23,6 @@ public class CityFavoriteService {
     private final CityNameValidationService cityNameValidationService;
     private final CityMapper cityMapper;
     private final WeatherClientService weatherClientService;
-
-    public CityFavoriteService(CityPersistenceService cityPersistenceService,
-                               FavoriteCityRepository favoriteCityRepository,
-                               CityNameValidationService cityNameValidationService,
-                               CityMapper cityMapper,
-                               WeatherClientService weatherClientService) {
-        this.cityPersistenceService = cityPersistenceService;
-        this.favoriteCityRepository = favoriteCityRepository;
-        this.cityNameValidationService = cityNameValidationService;
-        this.cityMapper = cityMapper;
-        this.weatherClientService = weatherClientService;
-    }
 
     public CityResponse createFavoriteCity(String cityName) {
         String normalize = normalizeCityName(cityName);

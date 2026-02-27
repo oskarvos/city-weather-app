@@ -1,25 +1,21 @@
 package com.oskarvos.cityweatherapp.city.service.persistence;
 
 import com.oskarvos.cityweatherapp.city.entity.City;
-import com.oskarvos.cityweatherapp.common.exception.DatabaseException;
 import com.oskarvos.cityweatherapp.city.repository.CityRepository;
+import com.oskarvos.cityweatherapp.common.exception.DatabaseException;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class CityPersistenceService {
 
-    private static final Logger log = LoggerFactory.getLogger(CityPersistenceService.class);
-
     private final CityRepository cityRepository;
-
-    public CityPersistenceService(CityRepository cityRepository) {
-        this.cityRepository = cityRepository;
-    }
 
     public City getCityFromDb(String cityName) {
         log.debug("Начинает поиск города {} в БД", cityName);

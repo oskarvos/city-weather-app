@@ -6,8 +6,8 @@ import com.oskarvos.cityweatherapp.common.exception.CityNotFoundException;
 import com.oskarvos.cityweatherapp.common.exception.CityValidationException;
 import com.oskarvos.cityweatherapp.common.exception.WeatherApiCityNotFoundException;
 import com.oskarvos.cityweatherapp.common.exception.WeatherApiConnectionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,25 +16,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class CityFacadeControllerService {
-
-    private static final Logger log = LoggerFactory.getLogger(CityFacadeControllerService.class);
 
     private final CityQueryService cityQueryService;
     private final CityDeleteService cityDeleteService;
     private final CityListingService cityListingService;
     private final CityFavoriteService cityFavoriteService;
-
-    public CityFacadeControllerService(CityQueryService cityQueryService,
-                                       CityDeleteService cityDeleteService,
-                                       CityListingService cityListingService,
-                                       CityFavoriteService cityFavoriteService) {
-        this.cityQueryService = cityQueryService;
-        this.cityDeleteService = cityDeleteService;
-        this.cityListingService = cityListingService;
-        this.cityFavoriteService = cityFavoriteService;
-    }
 
     public ResponseEntity<?> getCityName(String cityName) {
         log.info("Получен запрос на поиск города {}", cityName);

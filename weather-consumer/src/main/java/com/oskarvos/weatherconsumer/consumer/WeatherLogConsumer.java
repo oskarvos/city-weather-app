@@ -3,27 +3,21 @@ package com.oskarvos.weatherconsumer.consumer;
 import com.oskarvos.weatherconsumer.entity.WeatherRequestLog;
 import com.oskarvos.weatherconsumer.repository.WeatherRequestLogRepository;
 import com.oskarvos.weatherconsumer.service.CityRequestStatsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class WeatherLogConsumer {
 
-    private static final Logger log = LoggerFactory.getLogger(WeatherLogConsumer.class);
-
     private final WeatherRequestLogRepository repository;
     private final CityRequestStatsService cityRequestStatsService;
-
-    public WeatherLogConsumer(WeatherRequestLogRepository repository,
-                              CityRequestStatsService cityRequestStatsService) {
-        this.repository = repository;
-        this.cityRequestStatsService = cityRequestStatsService;
-    }
 
     @KafkaListener(topics = "weather-request", groupId = "weather-consumer-group")
     public void consume(Map<String, Object> message) {

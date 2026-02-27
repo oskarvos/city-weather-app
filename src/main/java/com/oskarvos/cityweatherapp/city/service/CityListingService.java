@@ -4,21 +4,17 @@ import com.oskarvos.cityweatherapp.city.dto.response.CityListResponse;
 import com.oskarvos.cityweatherapp.city.entity.City;
 import com.oskarvos.cityweatherapp.city.repository.CityRepository;
 import com.oskarvos.cityweatherapp.city.service.mapper.CityListMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class CityListingService {
 
     private final CityRepository cityRepository;
     private final CityListMapper cityListMapper;
-
-    public CityListingService(CityRepository cityRepository,
-                              CityListMapper cityListMapper) {
-        this.cityRepository = cityRepository;
-        this.cityListMapper = cityListMapper;
-    }
 
     public CityListResponse getAllCities() {
         List<City> favoriteCities = cityRepository.findFavoriteCitiesOrderByCreatedDateDesc();

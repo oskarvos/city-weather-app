@@ -1,7 +1,11 @@
 package com.oskarvos.cityweatherapp.audit.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -29,13 +33,6 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public Long getId() {
-        return id;
-    }
-
-    public User() {
-    }
-
     public User(String lastName, String firstName, String email, String role, String login, String password) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -43,30 +40,6 @@ public class User {
         this.role = role;
         this.login = login;
         this.password = password;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
 }

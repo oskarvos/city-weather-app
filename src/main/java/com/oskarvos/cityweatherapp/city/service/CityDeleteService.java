@@ -2,28 +2,22 @@ package com.oskarvos.cityweatherapp.city.service;
 
 import com.oskarvos.cityweatherapp.city.dto.response.CityResponse;
 import com.oskarvos.cityweatherapp.city.entity.City;
-import com.oskarvos.cityweatherapp.common.exception.CityNotFoundException;
-import com.oskarvos.cityweatherapp.common.exception.DatabaseException;
 import com.oskarvos.cityweatherapp.city.service.mapper.CityMapper;
 import com.oskarvos.cityweatherapp.city.service.persistence.CityPersistenceService;
 import com.oskarvos.cityweatherapp.city.service.validation.CityNameValidationService;
+import com.oskarvos.cityweatherapp.common.exception.CityNotFoundException;
+import com.oskarvos.cityweatherapp.common.exception.DatabaseException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class CityDeleteService {
 
     private final CityMapper cityMapper;
     private final CityNameValidationService cityNameValidationService;
     private final CityPersistenceService cityPersistenceService;
-
-    public CityDeleteService(CityMapper cityMapper,
-                             CityNameValidationService cityNameValidationService,
-                             CityPersistenceService cityPersistenceService) {
-        this.cityMapper = cityMapper;
-        this.cityNameValidationService = cityNameValidationService;
-        this.cityPersistenceService = cityPersistenceService;
-    }
 
     @Transactional
     public CityResponse deleteCityByName(String cityName) {

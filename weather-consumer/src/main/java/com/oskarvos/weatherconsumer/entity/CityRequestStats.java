@@ -1,7 +1,13 @@
 package com.oskarvos.weatherconsumer.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "city_request_stats")
 public class CityRequestStats {
@@ -16,29 +22,5 @@ public class CityRequestStats {
 
     @Column(name = "request_count")
     private Integer requestCount;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
-    public Integer getRequestCount() {
-        return requestCount;
-    }
-
-    public void setRequestCount(Integer requestCount) {
-        this.requestCount = requestCount;
-    }
 
 }

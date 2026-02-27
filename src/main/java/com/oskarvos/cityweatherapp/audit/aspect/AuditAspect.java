@@ -5,6 +5,7 @@ import com.oskarvos.cityweatherapp.audit.annotation.Auditable;
 import com.oskarvos.cityweatherapp.audit.dto.AuditRequestDto;
 import com.oskarvos.cityweatherapp.audit.service.AuditService;
 import com.oskarvos.cityweatherapp.security.CustomUserDetails;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,17 +20,13 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Aspect
 @Component
 public class AuditAspect {
 
     private final AuditService auditService;
     private final ObjectMapper objectMapper;
-
-    public AuditAspect(AuditService auditService, ObjectMapper objectMapper) {
-        this.auditService = auditService;
-        this.objectMapper = objectMapper;
-    }
 
     @Around("@annotation(auditable)")
     public Object audit(ProceedingJoinPoint joinPoint, Auditable auditable) throws Throwable {
@@ -94,3 +91,4 @@ public class AuditAspect {
     }
 
 }
+

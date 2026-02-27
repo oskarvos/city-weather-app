@@ -3,22 +3,18 @@ package com.oskarvos.weatherconsumer.service;
 import com.oskarvos.weatherconsumer.entity.CityRequestStats;
 import com.oskarvos.weatherconsumer.entity.WeatherRequestLog;
 import com.oskarvos.weatherconsumer.repository.CityRequestStatsRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class CityRequestStatsService {
 
-    private static final Logger log = LoggerFactory.getLogger(CityRequestStatsService.class);
-
     private final CityRequestStatsRepository cityRequestStatsRepository;
-
-    public CityRequestStatsService(CityRequestStatsRepository cityRequestStatsRepository) {
-        this.cityRequestStatsRepository = cityRequestStatsRepository;
-    }
 
     public void createCityRequestStats(WeatherRequestLog weatherRequestLog) {
         log.info("Начинает поиск города в city_request_stats");

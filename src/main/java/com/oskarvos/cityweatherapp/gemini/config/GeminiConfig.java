@@ -1,19 +1,22 @@
 package com.oskarvos.cityweatherapp.gemini.config;
 
 import com.oskarvos.cityweatherapp.gemini.dto.request.GeminiRequestDto;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Getter
 @Component
 public class GeminiConfig {
-    private String apiKey;
-    private String apiUrl;
-    private Integer thinkingBudget;
-    private Integer maxOutputTokens;
-    private Double temperature;
+    private final String apiKey;
+    private final String apiUrl;
+    private final Integer thinkingBudget;
+    private final Integer maxOutputTokens;
+    private final Double temperature;
 
+    // Todo - убрать с кода ключ
     public GeminiConfig(@Value("${gemini.api.key}") String apiKey,
                         @Value("${gemini.api.url}") String apiUrl) {
         this.apiKey = apiKey;
@@ -21,26 +24,6 @@ public class GeminiConfig {
         this.thinkingBudget = 0;
         this.maxOutputTokens = 50;
         this.temperature = 0.5;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
-    public Integer getThinkingBudget() {
-        return thinkingBudget;
-    }
-
-    public Integer getMaxOutputTokens() {
-        return maxOutputTokens;
-    }
-
-    public Double getTemperature() {
-        return temperature;
     }
 
     public GeminiRequestDto createRequest(String prompt) {

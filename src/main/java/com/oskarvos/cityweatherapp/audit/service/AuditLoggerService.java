@@ -1,16 +1,14 @@
 package com.oskarvos.cityweatherapp.audit.service;
 
 import com.oskarvos.cityweatherapp.audit.entity.AuditLog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class AuditLoggerService {
-
-    private static final Logger log = LoggerFactory.getLogger(AuditLoggerService.class);
 
     public void logAuditRecord(String login, List<AuditLog> logs) {
         log.info("Админ запрашивает аудит для пользователя: {}", login);

@@ -4,14 +4,12 @@ import com.oskarvos.cityweatherapp.audit.dto.AuditRequestDto;
 import com.oskarvos.cityweatherapp.audit.entity.AuditLog;
 import com.oskarvos.cityweatherapp.audit.repository.AuditLogRepository;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AuditService {
-
-    private static final Logger log = LoggerFactory.getLogger(AuditService.class);
 
     private final AuditLogRepository auditLogRepository;
 

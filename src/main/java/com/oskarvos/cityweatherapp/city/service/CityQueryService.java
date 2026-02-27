@@ -2,13 +2,15 @@ package com.oskarvos.cityweatherapp.city.service;
 
 import com.oskarvos.cityweatherapp.city.dto.response.CityResponse;
 import com.oskarvos.cityweatherapp.city.entity.City;
-import com.oskarvos.cityweatherapp.kafka.WeatherRequestProducer;
 import com.oskarvos.cityweatherapp.city.service.mapper.CityMapper;
 import com.oskarvos.cityweatherapp.city.service.validation.CityNameValidationService;
-import com.oskarvos.cityweatherapp.weather.service.WeatherService;
 import com.oskarvos.cityweatherapp.common.validation.date.OutdatedChecker;
+import com.oskarvos.cityweatherapp.kafka.WeatherRequestProducer;
+import com.oskarvos.cityweatherapp.weather.service.WeatherService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class CityQueryService {
 
@@ -17,18 +19,6 @@ public class CityQueryService {
     private final CityMapper cityMapper;
     private final CityNameValidationService cityNameValidationService;
     private final WeatherRequestProducer weatherRequestProducer;
-
-    public CityQueryService(WeatherService weatherService,
-                            OutdatedChecker outdatedChecker,
-                            CityMapper cityMapper,
-                            CityNameValidationService cityNameValidationService,
-                            WeatherRequestProducer weatherRequestProducer) {
-        this.weatherService = weatherService;
-        this.outdatedChecker = outdatedChecker;
-        this.cityMapper = cityMapper;
-        this.cityNameValidationService = cityNameValidationService;
-        this.weatherRequestProducer = weatherRequestProducer;
-    }
 
     public CityResponse getCityByName(String cityName) {
         String normalizeCityName = normalizeCityName(cityName);

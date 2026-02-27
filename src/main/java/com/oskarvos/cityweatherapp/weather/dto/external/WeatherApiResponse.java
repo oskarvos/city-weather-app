@@ -2,7 +2,9 @@ package com.oskarvos.cityweatherapp.weather.dto.external;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherApiResponse {
 
@@ -11,10 +13,6 @@ public class WeatherApiResponse {
 
     @JsonProperty("main")
     private TemperatureInfo temperatureInfo;
-
-    public String getCityName() {
-        return cityName;
-    }
 
     public Double getTemperature() { // парсим JSON, получаем температуру
         return temperatureInfo != null ? temperatureInfo.getTemperature() : null;

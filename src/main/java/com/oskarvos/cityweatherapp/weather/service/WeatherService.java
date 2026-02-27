@@ -1,31 +1,23 @@
 package com.oskarvos.cityweatherapp.weather.service;
 
-import com.oskarvos.cityweatherapp.weather.dto.external.WeatherApiResponse;
 import com.oskarvos.cityweatherapp.city.entity.City;
+import com.oskarvos.cityweatherapp.city.service.persistence.CityPersistenceService;
 import com.oskarvos.cityweatherapp.common.exception.DatabaseException;
 import com.oskarvos.cityweatherapp.common.exception.WeatherApiConnectionException;
-import com.oskarvos.cityweatherapp.city.service.persistence.CityPersistenceService;
 import com.oskarvos.cityweatherapp.common.validation.date.OutdatedChecker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.oskarvos.cityweatherapp.weather.dto.external.WeatherApiResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class WeatherService {
-
-    private static final Logger log = LoggerFactory.getLogger(WeatherService.class);
 
     private final OutdatedChecker outdatedChecker;
     private final CityPersistenceService cityPersistenceService;
     private final WeatherClientService weatherClientService;
-
-    public WeatherService(OutdatedChecker outdatedChecker,
-                          CityPersistenceService cityPersistenceService,
-                          WeatherClientService weatherClientService) {
-        this.outdatedChecker = outdatedChecker;
-        this.cityPersistenceService = cityPersistenceService;
-        this.weatherClientService = weatherClientService;
-    }
 
     public City getActualWeather(String cityName) {
         log.info("Получение погоды для города: {}", cityName);

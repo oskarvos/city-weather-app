@@ -4,22 +4,18 @@ import com.oskarvos.cityweatherapp.city.dto.response.ValidationError;
 import com.oskarvos.cityweatherapp.common.exception.CityValidationException;
 import com.oskarvos.cityweatherapp.common.util.CityNameNormalizer;
 import com.oskarvos.cityweatherapp.common.validation.name.CityNameValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class CityNameValidationService {
 
     private final List<CityNameValidator> validators;
     private final CityNameNormalizer cityNameNormalizer;
-
-    public CityNameValidationService(List<CityNameValidator> validators,
-                                     CityNameNormalizer cityNameNormalizer) {
-        this.validators = validators;
-        this.cityNameNormalizer = cityNameNormalizer;
-    }
 
     public String normalizeAndValidate(String cityName) {
         String normalized = cityNameNormalizer.normalizer(cityName);
