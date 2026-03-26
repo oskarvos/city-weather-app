@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,22 +18,23 @@ public class CityPersistenceService {
 
     private final CityRepository cityRepository;
 
-    public City getCityFromDb(String cityName) {
+    public Optional<City> getCityFromDb(String cityName) {
         log.debug("Начинает поиск города {} в БД", cityName);
-        City city = cityRepository.findByCityName(cityName);
-
-        if (city != null) {
-            log.debug("Город {} найден в БД", cityName);
-        }
-        return city;
+        return cityRepository.findByCityName(cityName)
+                .map(city -> {
+                    log.debug("Город {} найден в БД", cityName);
+                    return city;
+                });
     }
 
     @Transactional
     public City saveCityInDb(String cityName, Double temperature) {
+        log.debug("Начинает сохранение города {} в БД", cityName);
         try {
             City city = new City(cityName, temperature);
-            log.info("Город {} успешно сохранен в БД", cityName);
-            return cityRepository.save(city);
+            City newCity = cityRepository.save(city);
+            log.debug("Город {} успешно сохранен в БД", cityName);
+            return newCity;
         } catch (Exception e) {
             log.error("Ошибка при сохранении города {} в БД: {}", cityName, e.getMessage());
             throw new DatabaseException("Не удалось сохранить город в БД город", e);
@@ -41,6 +43,7 @@ public class CityPersistenceService {
 
     @Transactional
     public City updateCityDb(City city, Double temperature) {
+        log.debug("Начинает обновление города {} в БД", city.getCityName());
         try {
             city.setTemperature(temperature);
             city.setUpdatedAt(LocalDateTime.now());
@@ -55,10 +58,11 @@ public class CityPersistenceService {
 
     @Transactional
     public void deleteCityDb(String cityName) {
+        log.debug("Начинает удалять города {} в БД", cityName);
         try {
-            City city = cityRepository.findByCityName(cityName);
-            cityRepository.delete(city);
-            log.info("Город {} успешно удален", city.getCityName());
+            Optional<City> city = cityRepository.findByCityName(cityName);
+            cityRepository.delete(city.get());
+            log.debug("Город {} успешно удален", city.get().getCityName());
         } catch (Exception e) {
             log.error("Ошибка при удалении города в БД {}: {}", cityName, e.getMessage());
             throw new DatabaseException("Не удалось удалить город!", e);

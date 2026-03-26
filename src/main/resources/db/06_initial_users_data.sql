@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 INSERT INTO users(last_name, first_name, email, role, login, password)
 VALUES ('Ivanov', 'Ivan', 'ivanov@gmail.com', 'USER', 'user',
         crypt('123', gen_salt('bf'))),

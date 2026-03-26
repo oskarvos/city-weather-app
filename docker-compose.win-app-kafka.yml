@@ -1,0 +1,86 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - weather-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # ИЗМЕНИ ЭТУ СТРОКУ:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092  # добавить
+    networks:
+      - weather-network
+
+  akhq:
+    image: tchiotludo/akhq:latest
+    container_name: akhq
+    depends_on:
+      - kafka
+    ports:
+      - "8082:8080"
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka:
+              properties:
+                bootstrap.servers: "kafka:9092"
+    networks:
+      - weather-network
+
+  weather-app:
+    build: .
+    container_name: weather-app
+    # network_mode: "host"  - закомментировать или удалить
+    ports:
+      - "8081:8081"  # проброс порта
+    depends_on:
+      - kafka
+    environment:
+      # Для доступа к PostgreSQL на хосте Windows
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/weather_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: "2223399z"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      # Kafka через имя контейнера
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - weather-network
+
+  weather-consumer:
+    build: ./weather-consumer
+    container_name: weather-consumer
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+      - weather-app  # добавить
+    environment:
+      SERVER_PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/weather_logs_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: "2223399z"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - weather-network
+
+networks:
+  weather-network:
+    driver: bridge

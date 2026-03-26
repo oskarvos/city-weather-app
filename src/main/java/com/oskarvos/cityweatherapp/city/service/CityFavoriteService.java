@@ -46,9 +46,7 @@ public class CityFavoriteService {
     }
 
     private City getCityFromDb(String cityName) {
-        City city = cityPersistenceService.getCityFromDb(cityName);
-        if (city == null) return null;
-        return city;
+        return cityPersistenceService.getCityFromDb(cityName);
     }
 
     private City getNewCityFromApi(String cityName) {

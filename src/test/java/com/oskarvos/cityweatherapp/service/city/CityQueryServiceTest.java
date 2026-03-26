@@ -5,9 +5,12 @@ import com.oskarvos.cityweatherapp.city.entity.City;
 import com.oskarvos.cityweatherapp.city.service.CityQueryService;
 import com.oskarvos.cityweatherapp.city.service.mapper.CityMapper;
 import com.oskarvos.cityweatherapp.city.service.validation.CityNameValidationService;
-import com.oskarvos.cityweatherapp.weather.service.WeatherService;
 import com.oskarvos.cityweatherapp.common.validation.date.OutdatedChecker;
+import com.oskarvos.cityweatherapp.weather.service.WeatherService;
+import lombok.Builder;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,6 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+@Builder
 @ExtendWith(MockitoExtension.class)
 class CityQueryServiceTest {
 
@@ -30,16 +38,16 @@ class CityQueryServiceTest {
     @InjectMocks
     CityQueryService cityQueryService;
 
-    private City city;
-    private CityResponse cityResponse;
-    private CityResponse cityResponseInfo;
-    private static final Long ID = 1L;
-    private static final String CITY_NAME = "Minsk";
-    private static final Double TEMPERATURE = 22.3;
-    private static final LocalDateTime UPDATE_AT = LocalDateTime.of(
+    public City city;
+    public CityResponse cityResponse;
+    public CityResponse cityResponseInfo;
+    public static final Long ID = 1L;
+    public static final String CITY_NAME = "Minsk";
+    public static final Double TEMPERATURE = 22.3;
+    public static final LocalDateTime UPDATE_AT = LocalDateTime.of(
             2026, 2, 19, 20, 30, 45, 123456789);
-    private static final String INFO = "устаревшие данные";
-    private static final String NORMALIZE = "Minsk";
+    public static final String INFO = "устаревшие данные";
+    public static final String NORMALIZE = "Minsk";
 
     @BeforeEach
     void setUp() {
@@ -72,7 +80,7 @@ class CityQueryServiceTest {
 //        assertAll("Должен вернуть актуальные данные",
 //                () -> assertEquals(ID, response.getId()),
 //                () -> assertEquals(CITY_NAME, response.getCityName()),
-//                () -> assertEquals(TEMPERATURE, response.getTemperature()),
+//                () -> assertEquals(TEMPERATURE, response.getTemperature())
 //                () -> assertNull(response.getInfo(), "Для актуальных данных сообщения быть не должно")
 //        );
 //

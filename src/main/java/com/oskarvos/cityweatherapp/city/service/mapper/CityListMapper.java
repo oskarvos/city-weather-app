@@ -14,10 +14,11 @@ public class CityListMapper {
 
     private final CityMapper cityMapper;
 
-    public CityListResponse buildValidList(List<City> favorite, List<City> cities) {
+    public CityListResponse buildValidList(
+            List<City> favorite,
+            List<City> cities) {
         List<CityResponse> favoriteDto = mappingCityList(favorite);
         List<CityResponse> citiesDto = mappingCityList(cities);
-
         return new CityListResponse(favoriteDto, citiesDto);
     }
 

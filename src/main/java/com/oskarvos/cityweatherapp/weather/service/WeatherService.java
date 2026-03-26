@@ -21,37 +21,44 @@ public class WeatherService {
 
     public City getActualWeather(String cityName) {
         log.info("Получение погоды для города: {}", cityName);
-        City dbCity = cityPersistenceService.getCityFromDb(cityName);
 
-        if (dbCity == null) {
-            log.debug("Город {} не найден в БД", cityName);
-            return saveNewCity(cityName);
-        }
+        return cityPersistenceService.getCityFromDb(cityName)
+                .map(city -> {
+                    if (outdatedChecker.isOutdated(city.getUpdatedAt())) {
+                        log.info("Обновление устаревших данных для города: {}", cityName);
+                        return updateCityInDb(city, cityName);
+                    }
+                    log.debug("Город {} найден в БД, данные актуальны", cityName);
+                    return city;
+                })
+                .orElseGet(() -> {
+                    log.debug("Город {} не найден в БД", cityName);
+                    return saveNewCity(cityName);
+                });
 
-        if (outdatedChecker.isOutdated(dbCity.getUpdatedAt())) {
-            log.info("Обновление устаревших данных для города: {}", cityName);
-            return updateCityInDb(dbCity, cityName);
-        }
-
-        log.debug("Город {} найден в БД, данные актуальны", cityName);
-        return dbCity;
+//        City dbCity = cityPersistenceService.getCityFromDb(cityName);
+//
+//        if (dbCity == null) {
+//        }
+//
+//        if (outdatedChecker.isOutdated(dbCity.getUpdatedAt())) {
+//            log.info("Обновление устаревших данных для города: {}", cityName);
+//            return updateCityInDb(dbCity, cityName);
+//        }
+//
+//        log.debug("Город {} найден в БД, данные актуальны", cityName);
+//        return dbCity;
     }
 
     private City saveNewCity(String cityName) {
         WeatherApiResponse weatherApiResponse = weatherClientService.sendRequestWeatherApiClient(cityName);
-        if (weatherApiResponse != null) {
-            return cityPersistenceService.saveCityInDb(cityName, weatherApiResponse.getTemperature());
-        }
-        return null;
+        return cityPersistenceService.saveCityInDb(cityName, weatherApiResponse.getTemperature());
     }
 
     private City updateCityInDb(City dbCity, String cityName) {
         try {
             WeatherApiResponse weatherApiResponse = weatherClientService.sendRequestWeatherApiClient(cityName);
-            if (weatherApiResponse != null) {
-                return cityPersistenceService.updateCityDb(dbCity, weatherApiResponse.getTemperature());
-            }
-            return dbCity;
+            return cityPersistenceService.updateCityDb(dbCity, weatherApiResponse.getTemperature());
         } catch (WeatherApiConnectionException e) {
             log.warn("Не удалось обновить данные для города {}, возвращаем устаревшие: {}", cityName, e.getMessage());
             return dbCity;

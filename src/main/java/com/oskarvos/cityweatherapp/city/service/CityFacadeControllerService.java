@@ -21,6 +21,10 @@ import java.util.Map;
 @Service
 public class CityFacadeControllerService {
 
+    private final String ERROR = "ERROR";
+    private final String ERROR_VALID = "Ошибка валидации";
+    private final String DETAILS = "DETAILS";
+
     private final CityQueryService cityQueryService;
     private final CityDeleteService cityDeleteService;
     private final CityListingService cityListingService;
@@ -41,14 +45,14 @@ public class CityFacadeControllerService {
             log.error("Город {} не найден в API погоды", cityName);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
+                    .body(Map.of(ERROR, e.getMessage()));
         } catch (CityValidationException e) {
             log.warn("Ошибка валидации для город {}: {} ошибок", cityName, e.getErrors().size());
             return ResponseEntity
                     .badRequest()
                     .body(Map.of(
-                            "error", "Ошибки валидации",
-                            "details", e.getErrors()
+                            ERROR, ERROR_VALID,
+                            DETAILS, e.getErrors()
                     ));
         }
     }
@@ -77,14 +81,14 @@ public class CityFacadeControllerService {
             log.warn("Город {} не найден в БД", cityName);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
+                    .body(Map.of(ERROR, e.getMessage()));
         } catch (CityValidationException e) {
             log.warn("Ошибка валидации для город {}: {} ошибок", cityName, e.getErrors().size());
             return ResponseEntity
                     .badRequest()
                     .body(Map.of(
-                            "error", "Ошибки валидации",
-                            "details", e.getErrors()
+                            ERROR, ERROR_VALID,
+                            DETAILS, e.getErrors()
                     ));
         }
     }
@@ -100,14 +104,14 @@ public class CityFacadeControllerService {
             log.error("Город {} не найден в API погоды", cityName);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
+                    .body(Map.of(ERROR, e.getMessage()));
         } catch (CityValidationException e) {
             log.warn("Ошибка валидации для город {}: {} ошибок", cityName, e.getErrors().size());
             return ResponseEntity
                     .badRequest()
                     .body(Map.of(
-                            "error", "Ошибки валидации",
-                            "details", e.getErrors()
+                            ERROR, ERROR_VALID,
+                            DETAILS, e.getErrors()
                     ));
         }
     }
