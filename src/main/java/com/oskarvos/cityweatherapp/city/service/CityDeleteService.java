@@ -31,11 +31,8 @@ public class CityDeleteService {
     }
 
     private City findCityFromDb(String cityName) {
-        City city = cityPersistenceService.getCityFromDb(cityName);
-        if (city == null) {
-            throw new CityNotFoundException("Город с таким названием не найден");
-        }
-        return city;
+        return cityPersistenceService.getCityFromDb(cityName)
+                .orElseThrow(() -> new CityNotFoundException("Город с таким названием не найден"));
     }
 
     private CityResponse deleteCityFromDb(City city) {
