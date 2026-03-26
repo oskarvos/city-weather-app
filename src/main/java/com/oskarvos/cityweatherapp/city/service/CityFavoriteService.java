@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -27,7 +26,7 @@ public class CityFavoriteService {
 
     public CityResponse createFavoriteCity(String cityName) {
         String normalize = normalizeCityName(cityName);
-        City city = getCityFromDb(normalize).orElse(null);
+        City city = getCityFromDb(normalize);
 
         if (city == null) {
             City newCity = getNewCityFromApi(normalize);
@@ -46,8 +45,10 @@ public class CityFavoriteService {
         return cityNameValidationService.normalizeAndValidate(cityName);
     }
 
-    private Optional<City> getCityFromDb(String cityName) {
-        return cityPersistenceService.getCityFromDb(cityName);
+    private City getCityFromDb(String cityName) {
+        City city = cityPersistenceService.getCityFromDb(cityName);
+        if (city == null) return null;
+        return city;
     }
 
     private City getNewCityFromApi(String cityName) {

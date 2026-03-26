@@ -21,33 +21,18 @@ public class WeatherService {
 
     public City getActualWeather(String cityName) {
         log.info("Получение погоды для города: {}", cityName);
+        City dbCity = cityPersistenceService.getCityFromDb(cityName);
 
-        return cityPersistenceService.getCityFromDb(cityName)
-                .map(city -> {
-                    if (outdatedChecker.isOutdated(city.getUpdatedAt())) {
-                        log.info("Обновление устаревших данных для города: {}", cityName);
-                        return updateCityInDb(city, cityName);
-                    }
-                    log.debug("Город {} найден в БД, данные актуальны", cityName);
-                    return city;
-                })
-                .orElseGet(() -> {
-                    log.debug("Город {} не найден в БД", cityName);
-                    return saveNewCity(cityName);
-                });
+        if (dbCity == null) {
+        }
 
-//        City dbCity = cityPersistenceService.getCityFromDb(cityName);
-//
-//        if (dbCity == null) {
-//        }
-//
-//        if (outdatedChecker.isOutdated(dbCity.getUpdatedAt())) {
-//            log.info("Обновление устаревших данных для города: {}", cityName);
-//            return updateCityInDb(dbCity, cityName);
-//        }
-//
-//        log.debug("Город {} найден в БД, данные актуальны", cityName);
-//        return dbCity;
+        if (outdatedChecker.isOutdated(dbCity.getUpdatedAt())) {
+            log.info("Обновление устаревших данных для города: {}", cityName);
+            return updateCityInDb(dbCity, cityName);
+        }
+
+        log.debug("Город {} найден в БД, данные актуальны", cityName);
+        return dbCity;
     }
 
     private City saveNewCity(String cityName) {

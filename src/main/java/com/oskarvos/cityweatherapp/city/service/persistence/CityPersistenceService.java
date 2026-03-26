@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,13 +17,14 @@ public class CityPersistenceService {
 
     private final CityRepository cityRepository;
 
-    public Optional<City> getCityFromDb(String cityName) {
+    public City getCityFromDb(String cityName) {
         log.debug("Начинает поиск города {} в БД", cityName);
-        return cityRepository.findByCityName(cityName)
-                .map(city -> {
-                    log.debug("Город {} найден в БД", cityName);
-                    return city;
-                });
+        City city = cityRepository.findByCityName(cityName);
+
+        if (city != null) {
+            log.debug("Город {} найден в БД", cityName);
+        }
+        return city;
     }
 
     @Transactional
@@ -58,11 +58,10 @@ public class CityPersistenceService {
 
     @Transactional
     public void deleteCityDb(String cityName) {
-        log.debug("Начинает удалять города {} в БД", cityName);
         try {
-            Optional<City> city = cityRepository.findByCityName(cityName);
-            cityRepository.delete(city.get());
-            log.debug("Город {} успешно удален", city.get().getCityName());
+            City city = cityRepository.findByCityName(cityName);
+            cityRepository.delete(city);
+            log.info("Город {} успешно удален", city.getCityName());
         } catch (Exception e) {
             log.error("Ошибка при удалении города в БД {}: {}", cityName, e.getMessage());
             throw new DatabaseException("Не удалось удалить город!", e);
