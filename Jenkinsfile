@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+     tools {
+        jdk 'JDK17'
+        maven 'Maven'
+        }
+
     environment {
         HOST_IP = '172.17.0.1'
         DOCKER_COMPOSE_FILE = 'docker-compose.win-app-kafka-jenkins.yml'
